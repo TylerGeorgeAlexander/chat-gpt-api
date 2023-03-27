@@ -1,8 +1,11 @@
-import { config } from "dotenv";
-config();
+const express = require("express");
+const { config } = require("dotenv");
+const { Configuration, OpenAIApi } = require("openai");
+const readline = require("readline");
 
-import { Configuration, OpenAIApi } from "openai";
-import readline from "readline";
+config();
+const cors = require('cors');
+const app = express();
 
 const openai = new OpenAIApi(
   new Configuration({
@@ -10,17 +13,23 @@ const openai = new OpenAIApi(
   })
 );
 
-const userInterface = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+app.use(cors()); // This allows all origins to access your server
 
-userInterface.prompt();
-userInterface.on("line", async (input) => {
-  const res = await openai.createChatCompletion({
+app.use(express.json());
+
+app.post("/chat", async (req, res) => {
+  const input = req.body.input;
+  const result = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [{ role: "user", content: input }],
   });
-  console.log(res.data.choices[0].message.content);
-  userInterface.prompt();
+  const output = result.data.choices[0].message.content;
+  res.json({ output });
+});
+
+
+
+const port = process.env.PORT || 2121;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
