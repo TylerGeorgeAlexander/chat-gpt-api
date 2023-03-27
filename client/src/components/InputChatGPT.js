@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 
 const InputChatGPT = () => {
+  const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+
+  const handleChange = (event) => {
+    setInput(event.target.value);
+  };
 
   const handleClick = () => {
     const requestData = {
-      input: "Hello, how are you?",
+      input: input,
     };
 
     fetch("http://localhost:2121/chat", {
@@ -26,7 +31,8 @@ const InputChatGPT = () => {
 
   return (
     <div>
-      <button onClick={handleClick}>Click me</button>
+      <textarea value={input} onChange={handleChange} />
+      <button onClick={handleClick}>Send</button>
       <div>{output}</div>
     </div>
   );
