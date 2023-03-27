@@ -1,3 +1,6 @@
+// TODO: rewrite filename from script to index
+// TODO: MVC architecture
+
 const express = require("express");
 const { config } = require("dotenv");
 const { Configuration, OpenAIApi } = require("openai");
