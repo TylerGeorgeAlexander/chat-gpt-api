@@ -1,5 +1,5 @@
 {
-  "name": "chat-gpt-api",
+  "name": "chat-gpt-api-server",
   "version": "1.0.0",
   "description": "",
   "type": "commonjs",
