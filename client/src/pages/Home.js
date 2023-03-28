@@ -4,7 +4,6 @@ import InputChatGPT from "../components/InputChatGPT";
 const Home = () => {
   return (
     <div>
-      Home
       <InputChatGPT />
     </div>
   );

@@ -1,13 +1,11 @@
-// TODO: rewrite filename from script to index
 // TODO: MVC architecture
 
 const express = require("express");
 const { config } = require("dotenv");
 const { Configuration, OpenAIApi } = require("openai");
-const readline = require("readline");
 
 config();
-const cors = require('cors');
+const cors = require("cors");
 const app = express();
 
 const openai = new OpenAIApi(
@@ -29,8 +27,6 @@ app.post("/chat", async (req, res) => {
   const output = result.data.choices[0].message.content;
   res.json({ output });
 });
-
-
 
 const port = process.env.PORT || 2121;
 app.listen(port, () => {
