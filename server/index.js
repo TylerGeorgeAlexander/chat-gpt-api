@@ -1,4 +1,5 @@
 // TODO: MVC architecture
+// TODO: add middleware for validation
 
 const express = require("express");
 const { config } = require("dotenv");
