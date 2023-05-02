@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
 const InputChatGPT = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
-  const [inputSearchHistory, setInputSearchHistory] = useState([]);
+  const [searchHistory, setSearchHistory] = useState([]);
+
+  useEffect(() => {
+    const storedHistory = localStorage.getItem("searchHistory");
+    if (storedHistory) {
+      setSearchHistory(JSON.parse(storedHistory));
+    }
+  }, []);
 
   const handleChange = (event) => {
     setInput(event.target.value);
   };
 
   const handleClick = () => {
-    setInputSearchHistory([...inputSearchHistory, input]);
-
     const requestData = {
       input: input,
     };
@@ -27,6 +32,12 @@ const InputChatGPT = () => {
       .then((response) => response.json())
       .then((data) => {
         setOutput(data.output);
+        const updatedSearchHistory = [
+          ...searchHistory,
+          { input: input, output: data.output },
+        ];
+        setSearchHistory(updatedSearchHistory);
+        localStorage.setItem("searchHistory", JSON.stringify(updatedSearchHistory));
       })
       .catch((error) => {
         console.error(error);
@@ -34,7 +45,8 @@ const InputChatGPT = () => {
   };
 
   const restoreSearch = (search) => {
-    setInput(search);
+    setInput(search.input);
+    setOutput(search.output);
   };
 
   return (
@@ -60,13 +72,13 @@ const InputChatGPT = () => {
       <div className="mt-4">
         <h2 className="font-bold">Search History:</h2>
         <ul>
-          {inputSearchHistory.map((search, index) => (
+          {searchHistory.map((search, index) => (
             <li key={index}>
               <button
                 className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none"
                 onClick={() => restoreSearch(search)}
               >
-                {search}
+                {search.input}
               </button>
             </li>
           ))}
