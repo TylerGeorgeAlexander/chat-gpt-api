@@ -4,12 +4,15 @@ import ReactMarkdown from "react-markdown";
 const InputChatGPT = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const [inputSearchHistory, setInputSearchHistory] = useState([]);
 
   const handleChange = (event) => {
     setInput(event.target.value);
   };
 
   const handleClick = () => {
+    setInputSearchHistory([...inputSearchHistory, input]);
+
     const requestData = {
       input: input,
     };
@@ -28,6 +31,10 @@ const InputChatGPT = () => {
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  const restoreSearch = (search) => {
+    setInput(search);
   };
 
   return (
@@ -49,6 +56,21 @@ const InputChatGPT = () => {
       </button>
       <div className="prose">
         <ReactMarkdown>{`${output}`}</ReactMarkdown>
+      </div>
+      <div className="mt-4">
+        <h2 className="font-bold">Search History:</h2>
+        <ul>
+          {inputSearchHistory.map((search, index) => (
+            <li key={index}>
+              <button
+                className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none"
+                onClick={() => restoreSearch(search)}
+              >
+                {search}
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
