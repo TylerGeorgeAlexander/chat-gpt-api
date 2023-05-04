@@ -22,7 +22,7 @@ const InputChatGPT = () => {
       input: input,
     };
 
-    fetch(process.env.URL_ENDPOINT, {
+    fetch(process.env.REACT_APP_URL_ENDPOINT, {
       method: "POST",
       body: JSON.stringify(requestData),
       headers: {
