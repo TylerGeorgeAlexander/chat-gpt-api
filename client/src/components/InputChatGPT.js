@@ -22,7 +22,7 @@ const InputChatGPT = () => {
       input: input,
     };
 
-    fetch(process.env.URL_ENDPOINT || "http://localhost:2121/chat", {
+    fetch(process.env.URL_ENDPOINT, {
       method: "POST",
       body: JSON.stringify(requestData),
       headers: {
