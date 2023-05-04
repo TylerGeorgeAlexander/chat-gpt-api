@@ -5,7 +5,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run start --prefix client\" \"npm run start --prefix server\"",
+    "start": "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\"",
     "develop": "concurrently \"cd server && npm run dev\" \"cd client && npm start\"",
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd client && npm run build",
