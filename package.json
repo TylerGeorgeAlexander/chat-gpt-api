@@ -4,7 +4,6 @@
   "description": "",
   "type": "commonjs",
   "main": "index.js",
-  "private": true,
   "workspaces": [
     "server",
     "client"
