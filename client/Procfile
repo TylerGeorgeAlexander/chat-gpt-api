@@ -1,1 +1,1 @@
-web: cd server && npm install && npm start && cd ../client && npm install && npm run build && npm start
+web: "concurrently \"npm run start --prefix server\" \"npm run start --prefix client\""
