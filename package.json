@@ -4,6 +4,11 @@
   "description": "",
   "type": "commonjs",
   "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
   "scripts": {
     "start": "concurrently \"npm run start --prefix client\" \"npm run start --prefix server\"",
     "develop": "concurrently \"cd server && npm run dev\" \"cd client && npm start\"",
