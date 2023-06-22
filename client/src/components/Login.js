@@ -5,6 +5,7 @@ import "../index.css"; // Update the path to src/index.css
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null); // State variable for error message
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
@@ -42,12 +43,11 @@ const Login = ({ onLogin }) => {
         navigate("/dashboard");
       } else {
         const error = await response.json();
-        console.error("Failed to log in:", error.message);
-        // Here you could set some state to show an error message to the user
+        setError(error.message); // Set the error message state
       }
     } catch (err) {
       console.error("Network or server error:", err);
-      // Here you could set some state to show an error message to the user
+      setError("An error occurred"); // Set the error message state
     }
   };
 
@@ -55,6 +55,7 @@ const Login = ({ onLogin }) => {
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="bg-white rounded-lg shadow p-8 max-w-sm w-full">
         <h2 className="text-2xl font-bold mb-4">Login</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display the error message */}
         <form onSubmit={handleSubmit}>
           <label className="block mb-4">
             Email:

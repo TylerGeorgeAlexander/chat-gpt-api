@@ -71,10 +71,7 @@ function App() {
           {/* Define your routes here */}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route
-              path="/login"
-              element={<Login onLogin={handleLogin} />}
-            />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/registration" element={<RegistrationPage />} />
             <Route
               path="/dashboard"
