@@ -26,12 +26,14 @@ const registerUser = async (req, res) => {
         // Save the user to the database
         await newUser.save();
 
-        res.status(201).json({ message: 'User registered successfully' });
+        // Redirect to the login page
+        res.redirect('/login');
     } catch (error) {
         console.error('Error in registering user:', error);
         res.status(500).json({ message: 'An error occurred during user registration' });
     }
 };
+
 
 // Controller function for user login
 const login = async (req, res) => {
