@@ -91,10 +91,44 @@ const InputChatGPT = () => {
     }
   };
 
-  const restoreSearch = (search) => {
-    setInput(search.input);
-    setOutput(search.output);
+  const restoreSearch = async (searchId) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch search history');
+      }
+      const search = await response.json();
+      setInput(search.query);
+      setOutput(search.assertion);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  const updateTitle = async (searchId, title) => {
+    try {
+      await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ title }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      });
+      fetchSearchHistory(); // Refresh search history
+    } catch (error) {
+      console.error(error);
+    }
+  };  
 
   return (
     <div className="flex flex-col gap-2 p-4">
@@ -120,7 +154,7 @@ const InputChatGPT = () => {
         <li key={index} className="flex items-center">
           <button
             className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none"
-            onClick={() => restoreSearch(search)}
+            onClick={() => restoreSearch(search._id)}
           >
             {editingTitleIndex === index ? (
               <input
@@ -129,8 +163,7 @@ const InputChatGPT = () => {
                 onChange={(e) => setEditedTitle(e.target.value)}
                 onBlur={() => {
                   setEditingTitleIndex(null);
-                  search.title = editedTitle;
-                  updateSearchHistory(search.query, search.assertion, editedTitle); // send update request
+                  updateTitle(search._id, editedTitle); // send update request
                 }}
               />
             ) : (

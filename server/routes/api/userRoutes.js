@@ -21,6 +21,12 @@ router.get('/search-history', requireAuth, userController.getSearchHistory);
 // Update search history
 router.post('/search-history', requireAuth, userController.updateUserSearchHistory);
 
+// Update search history title by search Id
+router.put('/search-history/:searchId', requireAuth, userController.updateUserSearchHistoryTitleBySearchId);
+
+// Update search history title by search Id
+router.get('/search-history/:searchId', requireAuth, userController.getUserSearchHistoryTitleBySearchId);
+
 // Chat
 router.post('/chat', requireAuth, userController.chat);
 

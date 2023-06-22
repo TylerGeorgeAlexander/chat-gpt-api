@@ -155,6 +155,50 @@ const updateUserSearchHistory = async (req, res) => {
     }
 };
 
+// Controller function to update user search history's title
+const updateUserSearchHistoryTitleBySearchId = async (req, res) => {
+    try {
+        const { title } = req.body;
+        const { searchId } = req.params;
+        const userId = req.userId;
+    
+        const user = await User.findById(userId);
+    
+        const searchEntry = user.searchHistory.id(searchId);
+        if (!searchEntry) {
+          return res.status(404).json({ message: 'Search entry not found' });
+        }
+    
+        searchEntry.title = title;
+        await user.save();
+    
+        return res.status(200).json({ message: 'Title updated successfully' });
+      } catch (error) {
+        console.error('Error updating title:', error);
+        return res.status(500).json({ message: 'An error occurred' });
+      }
+};
+
+// Controller function to get user search history's title
+const getUserSearchHistoryTitleBySearchId = async (req, res) => {
+    try {
+        const { searchId } = req.params;
+        const userId = req.userId;
+    
+        const user = await User.findById(userId);
+    
+        const searchEntry = user.searchHistory.id(searchId);
+        if (!searchEntry) {
+          return res.status(404).json({ message: 'Search entry not found' });
+        }
+    
+        return res.status(200).json(searchEntry);
+      } catch (error) {
+        console.error('Error fetching search entry:', error);
+        return res.status(500).json({ message: 'An error occurred' });
+      }
+};
+  
 
 
 // Controller function for chat
@@ -181,5 +225,7 @@ module.exports = {
     getUserProfile,
     getSearchHistory,
     updateUserSearchHistory,
+    updateUserSearchHistoryTitleBySearchId,
+    getUserSearchHistoryTitleBySearchId,
     chat,
 };
