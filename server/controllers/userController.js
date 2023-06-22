@@ -137,7 +137,7 @@ const getSearchHistory = async (req, res) => {
 const updateUserSearchHistory = async (req, res) => {
     try {
         const userId = req.userId; 
-        const { query, assertion } = req.body;
+        const { query, assertion, title } = req.body;
 
         const user = await User.findById(userId);
 
@@ -145,7 +145,7 @@ const updateUserSearchHistory = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        user.searchHistory.push({ query, assertion });
+        user.searchHistory.push({ query, assertion, title: title || query });
         await user.save();
 
         return res.status(200).json({ message: 'Search history updated successfully' });
@@ -154,6 +154,7 @@ const updateUserSearchHistory = async (req, res) => {
         return res.status(500).json({ message: 'An error occurred' });
     }
 };
+
 
 
 // Controller function for chat

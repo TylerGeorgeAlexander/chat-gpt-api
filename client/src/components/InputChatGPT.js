@@ -7,6 +7,8 @@ const InputChatGPT = () => {
   const [output, setOutput] = useState('');
   const [searchHistory, setSearchHistory] = useState([]);
   const navigate = useNavigate();
+  const [editingTitleIndex, setEditingTitleIndex] = useState(null);
+  const [editedTitle, setEditedTitle] = useState('');
 
   const fetchSearchHistory = async () => {
     try {
@@ -36,11 +38,11 @@ const InputChatGPT = () => {
     fetchSearchHistory();
   }, []);
 
-  const updateSearchHistory = async (query, assertion) => {
+  const updateSearchHistory = async (query, assertion, title) => {
     try {
       await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history`, {
         method: 'POST',
-        body: JSON.stringify({ query, assertion }),
+        body: JSON.stringify({ query, assertion, title }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken')}`,
@@ -81,7 +83,7 @@ const InputChatGPT = () => {
       setOutput(data.output);
 
       // Update search history
-      updateSearchHistory(input, data.output);
+      updateSearchHistory(input, data.output, input);
     } catch (error) {
       console.error(error);
       // Redirect to login if unauthorized or error occurs
@@ -114,25 +116,41 @@ const InputChatGPT = () => {
       <div className="prose">
         <ReactMarkdown>{`${output}`}</ReactMarkdown>
       </div>
-      {searchHistory.length > 0 ? (
-        <div className="mt-4">
-          <h2 className="font-bold">Search History:</h2>
-          <ul>
-            {searchHistory.map((search, index) => (
-              <li key={index}>
-                <button
-                  className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none"
-                  onClick={() => restoreSearch(search)}
-                >
-                  {search.input}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <p>No search history available.</p>
-      )}
+      {searchHistory.map((search, index) => (
+        <li key={index} className="flex items-center">
+          <button
+            className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none"
+            onClick={() => restoreSearch(search)}
+          >
+            {editingTitleIndex === index ? (
+              <input
+                type="text"
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+                onBlur={() => {
+                  setEditingTitleIndex(null);
+                  search.title = editedTitle;
+                  updateSearchHistory(search.query, search.assertion, editedTitle); // send update request
+                }}
+              />
+            ) : (
+              search.title || search.query
+            )}
+          </button>
+          <button
+            className="ml-2 text-gray-500 hover:text-gray-700"
+            onClick={() => {
+              setEditingTitleIndex(index);
+              setEditedTitle(search.title || search.query);
+            }}
+          >
+            <span role="img" aria-label="edit">
+              ✏️
+            </span>
+          </button>
+        </li>
+      ))}
+
     </div>
   );
 };

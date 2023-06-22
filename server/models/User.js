@@ -24,6 +24,9 @@ const userSchema = new mongoose.Schema({
     assertion: {
       type: String,
     },
+    title: {
+      type: String,
+    },
     timestamp: {
       type: Date,
       default: Date.now,
