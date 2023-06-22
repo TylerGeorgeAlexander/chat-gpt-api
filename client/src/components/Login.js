@@ -19,6 +19,17 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic form validation
+    if (!email.trim()) {
+      setError("Please enter your email");
+      return;
+    }
+
+    if (!password.trim()) {
+      setError("Please enter your password");
+      return;
+    }
+
     // Send the login data to the server
     try {
       const response = await fetch("http://localhost:2121/api/users/login", {
@@ -55,7 +66,9 @@ const Login = ({ onLogin }) => {
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="bg-white rounded-lg shadow p-8 max-w-sm w-full">
         <h2 className="text-2xl font-bold mb-4">Login</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display the error message */}
+        {error && (
+          <p className="text-red-500 mb-4 text-sm">{error}</p>
+        )} {/* Display the error message */}
         <form onSubmit={handleSubmit}>
           <label className="block mb-4">
             Email:
@@ -82,7 +95,7 @@ const Login = ({ onLogin }) => {
             Login
           </button>
         </form>
-        <p className="mt-4">
+        <p className="mt-4 text-sm">
           Don't have an account?{" "}
           <Link to="/registration" className="text-blue-500">
             Sign up
