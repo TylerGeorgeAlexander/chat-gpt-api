@@ -5,27 +5,31 @@ import Home from './pages/Home';
 import Login from './components/Login';
 import RegistrationPage from './pages/RegistrationPage';
 import Dashboard from './pages/Dashboard';
-import LogoutButton from './components/LogoutButton'; // Import the LogoutButton component
-import PrivateWrapper from './components/PrivateWrapper'; // Import the PrivateWrapper component
+import LogoutButton from './components/LogoutButton';
+import PrivateWrapper from './components/PrivateWrapper';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authToken, setAuthToken] = useState('');
 
   useEffect(() => {
-    const authToken = localStorage.getItem('authToken');
-    if (authToken) {
+    const storedAuthToken = localStorage.getItem('authToken');
+    if (storedAuthToken) {
       setIsLoggedIn(true);
+      setAuthToken(storedAuthToken);
     }
   }, []);
 
   const handleLogin = (authTokenFromBackend) => {
     localStorage.setItem('authToken', authTokenFromBackend);
     setIsLoggedIn(true);
+    setAuthToken(authTokenFromBackend);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     setIsLoggedIn(false);
+    setAuthToken('');
   };
 
   return (
@@ -68,7 +72,6 @@ function App() {
         </nav>
 
         <div className="container mx-auto">
-          {/* Define your routes here */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
@@ -76,8 +79,8 @@ function App() {
             <Route
               path="/dashboard"
               element={
-                <PrivateWrapper isLoggedIn={isLoggedIn}>
-                  <Dashboard />
+                <PrivateWrapper isLoggedIn={isLoggedIn} authToken={authToken}>
+                  <Dashboard authToken={authToken} />
                 </PrivateWrapper>
               }
             />

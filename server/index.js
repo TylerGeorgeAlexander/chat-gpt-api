@@ -2,6 +2,7 @@ const express = require('express');
 const { config } = require('dotenv');
 const { Configuration, OpenAIApi } = require('openai');
 const mongoose = require('mongoose');
+const extractUserId= require('./middleware/authMiddleware')
 
 // Load environment variables from .env file
 config();
@@ -23,15 +24,12 @@ db.once('open', () => {
 const cors = require('cors');
 const app = express();
 
-const openai = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.API_KEY,
-  })
-);
-
 app.use(cors()); // This allows all origins to access your server
 
 app.use(express.json());
+
+// Middleware function to extract the user ID from the JWT token
+// app.use(extractUserId);
 
 // Import and use the routes
 const routes = require('./routes/index');

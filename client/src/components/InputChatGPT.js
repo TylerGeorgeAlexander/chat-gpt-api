@@ -1,47 +1,73 @@
-import React, { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
+import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { useNavigate } from 'react-router-dom';
 
 const InputChatGPT = () => {
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
   const [searchHistory, setSearchHistory] = useState([]);
+  const navigate = useNavigate();
+
+  const fetchSearchHistory = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/api/users/search-history`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch search history');
+      }
+      const data = await response.json();
+      setSearchHistory(data.searchHistory);
+    } catch (error) {
+      console.error(error);
+      // Redirect to login if unauthorized or error occurs
+      navigate('/login');
+    }
+  };
 
   useEffect(() => {
-    const storedHistory = localStorage.getItem("searchHistory");
-    if (storedHistory) {
-      setSearchHistory(JSON.parse(storedHistory));
-    }
+    fetchSearchHistory();
   }, []);
 
   const handleChange = (event) => {
     setInput(event.target.value);
   };
 
-  const handleClick = () => {
-    const requestData = {
-      input: input,
-    };
+  const handleClick = async () => {
+    try {
+      const requestData = {
+        input: input,
+      };
 
-    fetch(process.env.REACT_APP_URL_ENDPOINT, {
-      method: "POST",
-      body: JSON.stringify(requestData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setOutput(data.output);
-        const updatedSearchHistory = [
-          ...searchHistory,
-          { input: input, output: data.output },
-        ];
-        setSearchHistory(updatedSearchHistory);
-        localStorage.setItem("searchHistory", JSON.stringify(updatedSearchHistory));
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/api/users/chat`,
+        {
+          method: 'POST',
+          body: JSON.stringify(requestData),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to generate output');
+      }
+      const data = await response.json();
+      setOutput(data.output);
+      fetchSearchHistory();
+    } catch (error) {
+      console.error(error);
+      // Redirect to login if unauthorized or error occurs
+      navigate('/login');
+    }
   };
 
   const restoreSearch = (search) => {
@@ -69,21 +95,25 @@ const InputChatGPT = () => {
       <div className="prose">
         <ReactMarkdown>{`${output}`}</ReactMarkdown>
       </div>
-      <div className="mt-4">
-        <h2 className="font-bold">Search History:</h2>
-        <ul>
-          {searchHistory.map((search, index) => (
-            <li key={index}>
-              <button
-                className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none"
-                onClick={() => restoreSearch(search)}
-              >
-                {search.input}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {searchHistory.length > 0 ? (
+        <div className="mt-4">
+          <h2 className="font-bold">Search History:</h2>
+          <ul>
+            {searchHistory.map((search, index) => (
+              <li key={index}>
+                <button
+                  className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none"
+                  onClick={() => restoreSearch(search)}
+                >
+                  {search.input}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p>No search history available.</p>
+      )}
     </div>
   );
 };
