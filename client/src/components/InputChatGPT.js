@@ -36,11 +36,11 @@ const InputChatGPT = () => {
     fetchSearchHistory();
   }, []);
 
-  const updateSearchHistory = async (query) => {
+  const updateSearchHistory = async (query, assertion) => {
     try {
       await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history`, {
         method: 'POST',
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, assertion }),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken')}`,
@@ -81,7 +81,7 @@ const InputChatGPT = () => {
       setOutput(data.output);
 
       // Update search history
-      updateSearchHistory(input);
+      updateSearchHistory(input, data.output);
     } catch (error) {
       console.error(error);
       // Redirect to login if unauthorized or error occurs
