@@ -62,6 +62,17 @@ const login = async (req, res) => {
     }
 };
 
+// Controller function for user logout
+const logout = (req, res) => {
+    // Implement logout logic here
+    // For example, you can clear any session or token associated with the user
+    // Assuming you have middleware that handles the authentication, you can invalidate the session or token
+  
+    req.logout(); // Example: using Passport.js for authentication
+  
+    res.status(200).json({ message: 'Logout successful' });
+  };
+
 
 // Controller function to get user profile
 const getUserProfile = (req, res) => {
