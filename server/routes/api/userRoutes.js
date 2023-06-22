@@ -14,4 +14,8 @@ router.post('/logout', userController.logout);
 // Get user profile
 router.get('/profile', userController.getUserProfile);
 
+// Update search history
+router.post('/search-history', userController.updateUserSearchHistory);
+
+
 module.exports = router;

@@ -100,9 +100,34 @@ const getUserProfile = (req, res) => {
     });
 };
 
+const updateUserSearchHistory = async (req, res) => {
+    try {
+      const userId = req.userId; // Assuming you have middleware that extracts the authenticated user's ID
+      const { query } = req.body;
+  
+      // Find the user by ID
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Add the new search query to the user's searchHistory array
+      user.searchHistory.push({ query });
+      await user.save();
+  
+      return res.status(200).json({ message: 'Search history updated successfully' });
+    } catch (error) {
+      console.error('Error updating search history:', error);
+      return res.status(500).json({ message: 'An error occurred' });
+    }
+  };
+  
+
 module.exports = {
     registerUser,
     login,
     logout,
     getUserProfile,
+    updateUserSearchHistory,
 };
