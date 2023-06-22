@@ -18,8 +18,8 @@ function App() {
     }
   }, []);
 
-  const handleLogin = (authToken) => {
-    localStorage.setItem('authToken', authToken);
+  const handleLogin = (authTokenFromBackend) => {
+    localStorage.setItem('authToken', authTokenFromBackend);
     setIsLoggedIn(true);
   };
 
@@ -71,7 +71,10 @@ function App() {
           {/* Define your routes here */}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route
+              path="/login"
+              element={<Login onLogin={handleLogin} />}
+            />
             <Route path="/registration" element={<RegistrationPage />} />
             <Route
               path="/dashboard"

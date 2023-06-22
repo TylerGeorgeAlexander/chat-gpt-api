@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // Controller function for user registration
 const registerUser = async (req, res) => {
@@ -35,43 +36,48 @@ const registerUser = async (req, res) => {
 // Controller function for user login
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
-
-        // Find the user by email
-        const user = await User.findOne({ email });
-
-        // User not found
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Compare passwords
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        // Password does not match
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-        // Password matches, user authenticated
-        // You can generate a session or token for the logged-in user here
-        return res.status(200).json({ message: 'Login successful' });
+      const { email, password } = req.body;
+  
+      // Find the user by email
+      const user = await User.findOne({ email });
+  
+      // User not found
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Compare passwords
+      const isMatch = await bcrypt.compare(password, user.password);
+  
+      // Password does not match
+      if (!isMatch) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+  
+      // Password matches, user authenticated
+      // Generate a JWT token
+      const authToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '1h', // Set the token expiration time as desired
+      });
+  
+      // Send the authToken to the frontend
+      return res.status(200).json({ message: 'Login successful', authToken });
     } catch (err) {
-        console.error('Error in logging in:', err);
-        return res.status(500).json({ message: 'An error occurred' });
+      console.error('Error in logging in:', err);
+      return res.status(500).json({ message: 'An error occurred' });
     }
-};
+  };
 
 // Controller function for user logout
 const logout = (req, res) => {
-    // Implement logout logic here
-    // For example, you can clear any session or token associated with the user
-    // Assuming you have middleware that handles the authentication, you can invalidate the session or token
+    req.logout(); // Logout the user using Passport.js
   
-    req.logout(); // Example: using Passport.js for authentication
+    // Clear the authToken stored in localStorage
+    localStorage.removeItem('authToken');
   
     res.status(200).json({ message: 'Logout successful' });
   };
+  
 
 
 // Controller function to get user profile
@@ -98,5 +104,6 @@ const getUserProfile = (req, res) => {
 module.exports = {
     registerUser,
     login,
+    logout,
     getUserProfile,
 };
