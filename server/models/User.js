@@ -16,6 +16,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  searchHistory: [{
+    query: {
+      type: String,
+      required: true,
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
+  }],
 });
 
 // Create and export the User model
