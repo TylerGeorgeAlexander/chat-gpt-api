@@ -36,6 +36,23 @@ const InputChatGPT = () => {
     fetchSearchHistory();
   }, []);
 
+  const updateSearchHistory = async (query) => {
+    try {
+      await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history`, {
+        method: 'POST',
+        body: JSON.stringify({ query }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      });
+      fetchSearchHistory(); // Refresh search history
+    } catch (error) {
+      console.error(error);
+      navigate('/login');
+    }
+  };
+
   const handleChange = (event) => {
     setInput(event.target.value);
   };
@@ -62,7 +79,9 @@ const InputChatGPT = () => {
       }
       const data = await response.json();
       setOutput(data.output);
-      fetchSearchHistory();
+
+      // Update search history
+      updateSearchHistory(input);
     } catch (error) {
       console.error(error);
       // Redirect to login if unauthorized or error occurs
