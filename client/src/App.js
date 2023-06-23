@@ -9,32 +9,55 @@ import LogoutButton from './components/LogoutButton';
 import PrivateWrapper from './components/PrivateWrapper';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('authToken'));
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authToken, setAuthToken] = useState('');
+  const [tokenExpiration, setTokenExpiration] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
 
   useEffect(() => {
     const storedAuthToken = localStorage.getItem('authToken');
-    if (storedAuthToken) {
+    const storedTokenExpiration = localStorage.getItem('tokenExpiration');
+
+    if (storedAuthToken && storedTokenExpiration && new Date(storedTokenExpiration) > new Date()) {
       setIsLoggedIn(true);
       setAuthToken(storedAuthToken);
+      setTokenExpiration(storedTokenExpiration);
     }
     setIsLoading(false);
   }, []);
 
-
   const handleLogin = (authTokenFromBackend) => {
-    localStorage.setItem('authToken', authTokenFromBackend);
-    setIsLoggedIn(true);
-    setAuthToken(authTokenFromBackend);
+    try {
+      const decodedToken = JSON.parse(atob(authTokenFromBackend.split('.')[1]));
+      const expirationTime = new Date(decodedToken.exp * 1000);
+
+      localStorage.setItem('authToken', authTokenFromBackend);
+      localStorage.setItem('tokenExpiration', expirationTime.toISOString());
+
+      setIsLoggedIn(true);
+      setAuthToken(authTokenFromBackend);
+      setTokenExpiration(expirationTime.toISOString());
+    } catch (error) {
+      console.error('Error handling login:', error);
+    }
   };
+
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('tokenExpiration');
     setIsLoggedIn(false);
     setAuthToken('');
+    setTokenExpiration(null);
   };
+
+  const isTokenExpired = () => {
+    return tokenExpiration && new Date(tokenExpiration) <= new Date();
+  };
+
+  if (isTokenExpired()) {
+    handleLogout();
+  }
 
   return (
     <Router>
