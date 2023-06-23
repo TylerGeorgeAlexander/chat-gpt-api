@@ -25,6 +25,7 @@ const Login = ({ onLogin }) => {
       // Clear the login timer when the component unmounts
       clearTimeout(loginTimer);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggingIn]);
 
   const handleEmailChange = (e) => {

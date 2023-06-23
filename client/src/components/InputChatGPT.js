@@ -36,6 +36,7 @@ const InputChatGPT = () => {
 
   useEffect(() => {
     fetchSearchHistory();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateSearchHistory = async (query, assertion, title) => {
