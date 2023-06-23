@@ -98,7 +98,7 @@ function App() {
           </div>
         </nav>
 
-        <div className="container mx-auto">
+        <div className="container">
           {isLoading ? (
             <div>Loading...</div>
           ) : (
