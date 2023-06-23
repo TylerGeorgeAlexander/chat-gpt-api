@@ -70,7 +70,7 @@ function App() {
               </Link>
             </div>
             <ul className="navbar__menu flex space-x-4">
-              {isLoggedIn ? (
+              {isLoggedIn && !isTokenExpired() ? (
                 <>
                   <li>
                     <Link
@@ -98,7 +98,7 @@ function App() {
           </div>
         </nav>
 
-        <div id='App' className="">
+        <div id="App" className="">
           {isLoading ? (
             <div>Loading...</div>
           ) : (
@@ -120,6 +120,7 @@ function App() {
       </div>
     </Router>
   );
+
 }
 
 export default App;
