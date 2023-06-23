@@ -4,7 +4,7 @@ import InputChatGPT from '../components/InputChatGPT'; // Import your InputChatG
 const Dashboard = () => {
   return (
     <div>
-      <h2>Dashboard</h2>
+      {/* <h2>Dashboard</h2> */}
       {/* You can use the InputChatGPT component here. For example: */}
       <InputChatGPT />
     </div>
