@@ -98,7 +98,7 @@ function App() {
           </div>
         </nav>
 
-        <div className="container">
+        <div id='App' className="">
           {isLoading ? (
             <div>Loading...</div>
           ) : (
