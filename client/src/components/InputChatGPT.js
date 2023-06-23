@@ -137,81 +137,100 @@ const InputChatGPT = () => {
   };
 
   return (
-    <div>
-      {/* Toggle sidebar button */}
-      <button
-        className="fixed left-6 top-20 text-black hover:text-gray-300 z-10"
-        onClick={() => setIsSidebarVisible(!isSidebarVisible)}
-      >
-        <BsLayoutSidebarInset size={24} />
-      </button>
-
-      <div className="flex p-4 md:gap-4 relative">
-        {/* Sidebar */}
-        {isSidebarVisible && (
-          <div className="w-1/4 bg-gray-100 p-4 rounded">
-            {searchHistory.map((search, index) => (
-              <li key={index} className="flex items-center justify-between mb-2">
-                <button
-                  className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate"
-                  onClick={() => restoreSearch(search._id)}
-                >
-                  {editingTitleIndex === index ? (
-                    <input
-                      type="text"
-                      value={editedTitle}
-                      onChange={(e) => setEditedTitle(e.target.value)}
-                      onBlur={() => {
-                        setEditingTitleIndex(null);
-                        updateTitle(search._id, editedTitle); // send update request
-                      }}
-                    />
-                  ) : (
-                    search.title && search.title.length > 12 ? (
-                      `${search.title.slice(0, 12)}...`
-                    ) : (
-                      search.title || search.query
-                    )
-                  )}
-                </button>
-                <button
-                  className="text-gray-500 hover:text-gray-700"
-                  onClick={() => {
-                    setEditingTitleIndex(index);
-                    setEditedTitle(search.title || search.query);
-                  }}
-                >
-                  <AiFillEdit size={16} />
-                </button>
-              </li>
-            ))}
-          </div>
-        )}
-
-        {/* Main content */}
-        <div className="w-full md:w-3/4 flex flex-col gap-2 mt-16 md:mt-0">
-          <label htmlFor="chat-prompt" className="font-bold">
-            Input chatGPT prompt(s):
-          </label>
-          <textarea
-            id="chat-prompt"
-            className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            value={input}
-            onChange={handleChange}
-          />
+    <div className="container mx-auto">
+      <div className="flex">
+  
+        {/* Toggle sidebar button */}
+        <div className="z-10 bg-gray-100 p-4" style={{ height: '100vh' }}>
           <button
-            className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            onClick={handleClick}
+            className="text-black hover:text-gray-300"
+            onClick={() => setIsSidebarVisible(!isSidebarVisible)}
           >
-            Generate
+            <BsLayoutSidebarInset size={24} />
           </button>
-          <div className="prose">
-            <ReactMarkdown>{`${output}`}</ReactMarkdown>
+        </div>
+  
+        {/* Sidebar */}
+        <div
+          className={`bg-gray-100 transition-all duration-300 ${
+            isSidebarVisible ? 'w-3/12' : 'w-0'
+          }`}
+          style={{ height: '100vh' }}
+        >
+          <div className="p-4">
+            {/* Search History */}
+            {isSidebarVisible && (
+              <div>
+                {searchHistory.map((search, index) => (
+                  <li key={index} className="flex items-center justify-between mb-2">
+                    <button
+                      className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate"
+                      onClick={() => restoreSearch(search._id)}
+                    >
+                      {editingTitleIndex === index ? (
+                        <input
+                          type="text"
+                          value={editedTitle}
+                          onChange={(e) => setEditedTitle(e.target.value)}
+                          onBlur={() => {
+                            setEditingTitleIndex(null);
+                            updateTitle(search._id, editedTitle);
+                          }}
+                        />
+                      ) : (
+                        search.title && search.title.length > 12 ? (
+                          `${search.title.slice(0, 12)}...`
+                        ) : (
+                          search.title || search.query
+                        )
+                      )}
+                    </button>
+                    <button
+                      className="text-gray-500 hover:text-gray-700"
+                      onClick={() => {
+                        setEditingTitleIndex(index);
+                        setEditedTitle(search.title || search.query);
+                      }}
+                    >
+                      <AiFillEdit size={16} />
+                    </button>
+                  </li>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+  
+        {/* Main content */}
+        <div className="w-full px-4 flex-1">
+          <div className="flex flex-col gap-2 mt-4">
+            <label htmlFor="chat-prompt" className="font-bold">
+              Input chatGPT prompt(s):
+            </label>
+            <textarea
+              id="chat-prompt"
+              className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+              value={input}
+              onChange={handleChange}
+            />
+            <button
+              className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={handleClick}
+            >
+              Generate
+            </button>
+            <div className="prose">
+              <ReactMarkdown>{`${output}`}</ReactMarkdown>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
+  
+  
+
+
 };
 
 export default InputChatGPT;
