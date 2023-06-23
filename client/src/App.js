@@ -9,8 +9,10 @@ import LogoutButton from './components/LogoutButton';
 import PrivateWrapper from './components/PrivateWrapper';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('authToken'));
   const [authToken, setAuthToken] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     const storedAuthToken = localStorage.getItem('authToken');
@@ -18,7 +20,9 @@ function App() {
       setIsLoggedIn(true);
       setAuthToken(storedAuthToken);
     }
+    setIsLoading(false);
   }, []);
+
 
   const handleLogin = (authTokenFromBackend) => {
     localStorage.setItem('authToken', authTokenFromBackend);
@@ -72,19 +76,23 @@ function App() {
         </nav>
 
         <div className="container mx-auto">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/registration" element={<RegistrationPage />} />
-            <Route
-              path="/dashboard"
-              element={
-                <PrivateWrapper isLoggedIn={isLoggedIn} authToken={authToken}>
-                  <Dashboard authToken={authToken} />
-                </PrivateWrapper>
-              }
-            />
-          </Routes>
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : (
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+              <Route path="/registration" element={<RegistrationPage />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateWrapper isLoggedIn={isLoggedIn} authToken={authToken}>
+                    <Dashboard authToken={authToken} />
+                  </PrivateWrapper>
+                }
+              />
+            </Routes>
+          )}
         </div>
       </div>
     </Router>
