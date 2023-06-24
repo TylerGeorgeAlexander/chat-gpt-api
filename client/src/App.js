@@ -26,6 +26,12 @@ function App() {
     setIsLoading(false);
   }, []);
 
+  useEffect(() => {
+    if (tokenExpiration && new Date(tokenExpiration) <= new Date()) {
+      handleLogout();
+    }
+  }, [tokenExpiration]);
+
   const handleLogin = (authTokenFromBackend) => {
     try {
       const decodedToken = JSON.parse(atob(authTokenFromBackend.split('.')[1]));
@@ -42,7 +48,6 @@ function App() {
     }
   };
 
-
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('tokenExpiration');
@@ -50,14 +55,6 @@ function App() {
     setAuthToken('');
     setTokenExpiration(null);
   };
-
-  const isTokenExpired = () => {
-    return tokenExpiration && new Date(tokenExpiration) <= new Date();
-  };
-
-  if (isTokenExpired()) {
-    handleLogout();
-  }
 
   return (
     <Router>
@@ -70,7 +67,7 @@ function App() {
               </Link>
             </div>
             <ul className="navbar__menu flex space-x-4">
-              {isLoggedIn && !isTokenExpired() ? (
+              {isLoggedIn ? (
                 <>
                   <li>
                     <Link
@@ -120,7 +117,6 @@ function App() {
       </div>
     </Router>
   );
-
 }
 
 export default App;
