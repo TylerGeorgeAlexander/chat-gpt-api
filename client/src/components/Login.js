@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../index.css"; // Update the path to src/index.css
+import logo from '../../src/logo.svg'; // TODO: Update this path to where your logo is stored
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
@@ -25,7 +26,7 @@ const Login = ({ onLogin }) => {
       // Clear the login timer when the component unmounts
       clearTimeout(loginTimer);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggingIn]);
 
   const handleEmailChange = (e) => {
@@ -100,6 +101,9 @@ const Login = ({ onLogin }) => {
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="bg-white rounded-lg shadow p-8 max-w-sm w-full">
+        <div className="mb-4 text-center">
+          <img src={logo} alt="App Logo" className="w-24 mx-auto" /> {/* Logo area */}
+        </div>
         <h2 className="text-2xl font-bold mb-4">Login</h2>
         {error && (
           <div className="bg-red-100 text-red-700 rounded-md p-2 mb-4">
