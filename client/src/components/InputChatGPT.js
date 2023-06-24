@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 import { BsLayoutSidebarInset } from 'react-icons/bs';
-import { AiFillEdit } from 'react-icons/ai';
+import { AiFillEdit, AiFillSave } from 'react-icons/ai';
 
 const InputChatGPT = () => {
   const [input, setInput] = useState('');
@@ -14,6 +14,8 @@ const InputChatGPT = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
     window.innerWidth >= 768
   ); // Default to hidden on small screens
+  const [activeSearchIndex, setActiveSearchIndex] = useState(null);
+
 
   const fetchSearchHistory = async () => {
     try {
@@ -158,10 +160,21 @@ const InputChatGPT = () => {
         {isSidebarVisible && (
           <div className="p-4">
             {searchHistory.map((search, index) => (
-              <li key={index} className="flex items-center justify-between mb-2">
+              <div
+                key={index}
+                className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${editingTitleIndex === index
+                    ? 'bg-blue-100'
+                    : activeSearchIndex === index
+                      ? 'bg-gray-300'
+                      : 'hover:bg-gray-200'
+                  }`}
+              >
                 <button
-                  className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate"
-                  onClick={() => restoreSearch(search._id)}
+                  className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
+                  onClick={() => {
+                    setActiveSearchIndex(index);
+                    restoreSearch(search._id);
+                  }}
                 >
                   {editingTitleIndex === index ? (
                     <input
@@ -172,25 +185,38 @@ const InputChatGPT = () => {
                         setEditingTitleIndex(null);
                         updateTitle(search._id, editedTitle);
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          setEditingTitleIndex(null);
+                          updateTitle(search._id, editedTitle);
+                        }
+                      }}
                     />
+                  ) : search.title && search.title.length > 12 ? (
+                    `${search.title.slice(0, 12)}...`
                   ) : (
-                    search.title && search.title.length > 12 ? (
-                      `${search.title.slice(0, 12)}...`
-                    ) : (
-                      search.title || search.query
-                    )
+                    search.title || search.query
                   )}
                 </button>
                 <button
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-500 hover:text-gray-700 ml-2"
                   onClick={() => {
-                    setEditingTitleIndex(index);
-                    setEditedTitle(search.title || search.query);
+                    if (editingTitleIndex === index) {
+                      setEditingTitleIndex(null);
+                      updateTitle(search._id, editedTitle);
+                    } else {
+                      setEditingTitleIndex(index);
+                      setEditedTitle(search.title || search.query);
+                    }
                   }}
                 >
-                  <AiFillEdit size={16} />
+                  {editingTitleIndex === index ? (
+                    <AiFillSave size={16} />
+                  ) : (
+                    <AiFillEdit size={16} />
+                  )}
                 </button>
-              </li>
+              </div>
             ))}
           </div>
         )}
@@ -221,6 +247,8 @@ const InputChatGPT = () => {
       </div>
     </div>
   );
+
+
 
 
 
