@@ -143,12 +143,6 @@ const InputChatGPT = () => {
     }
   };
 
-  const handleDelete = async (searchId) => {
-    const confirmed = window.confirm('Are you sure you want to delete this search history?');
-    if (confirmed) {
-      deleteUserSearchHistory(searchId);
-    }
-  };
 
   return (
     <div className="flex">
