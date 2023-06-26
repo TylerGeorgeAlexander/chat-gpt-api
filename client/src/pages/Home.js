@@ -1,12 +1,18 @@
 import React from 'react';
-import heroImage from '../logo.svg'; // Update this path to where your hero image is stored
+import heroImage from '../assets/chip-design.jpg'; // Update this path to where your hero image is stored
 
 const Home = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
-      <div className="bg-cover bg-center h-96 flex items-center justify-center" style={{ backgroundImage: `url(${heroImage})` }}>
-        <h1 className="text-4xl text-white font-bold">Welcome to Chat GPT API Generator</h1>
+      {/* Hero */}
+      <div className="bg-cover bg-center h-96 flex items-center justify-center relative" style={{ backgroundImage: `url(${heroImage})` }}>
+        <h1 className="text-4xl text-white font-bold relative z-10">
+          Welcome to Chat GPT API Generator
+        </h1>
+        <span className="absolute inset-0 z-0 bg-blue-900 opacity-50 rounded-full"></span>
       </div>
+
+      {/* Main Product Descriptin */}
       <div className="max-w-3xl mx-auto p-8">
         <h2 className="text-2xl font-bold mb-4">What is Chat GPT API Generator?</h2>
         <p className="mb-4">
