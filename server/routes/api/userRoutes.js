@@ -27,6 +27,10 @@ router.put('/search-history/:searchId', requireAuth, userController.updateUserSe
 // Update search history title by search Id
 router.get('/search-history/:searchId', requireAuth, userController.getUserSearchHistoryTitleBySearchId);
 
+// Delete search history by searchId
+router.delete('/search-history/:searchId', requireAuth, userController.deleteUserSearchHistoryBySearchId);
+
+
 // Chat
 router.post('/chat', requireAuth, userController.chat);
 

@@ -136,7 +136,7 @@ const getSearchHistory = async (req, res) => {
 // Controller function to update user search history
 const updateUserSearchHistory = async (req, res) => {
     try {
-        const userId = req.userId; 
+        const userId = req.userId;
         const { query, assertion, title } = req.body;
 
         const user = await User.findById(userId);
@@ -161,22 +161,22 @@ const updateUserSearchHistoryTitleBySearchId = async (req, res) => {
         const { title } = req.body;
         const { searchId } = req.params;
         const userId = req.userId;
-    
+
         const user = await User.findById(userId);
-    
+
         const searchEntry = user.searchHistory.id(searchId);
         if (!searchEntry) {
-          return res.status(404).json({ message: 'Search entry not found' });
+            return res.status(404).json({ message: 'Search entry not found' });
         }
-    
+
         searchEntry.title = title;
         await user.save();
-    
+
         return res.status(200).json({ message: 'Title updated successfully' });
-      } catch (error) {
+    } catch (error) {
         console.error('Error updating title:', error);
         return res.status(500).json({ message: 'An error occurred' });
-      }
+    }
 };
 
 // Controller function to get user search history's title
@@ -184,22 +184,46 @@ const getUserSearchHistoryTitleBySearchId = async (req, res) => {
     try {
         const { searchId } = req.params;
         const userId = req.userId;
-    
+
         const user = await User.findById(userId);
-    
+
         const searchEntry = user.searchHistory.id(searchId);
         if (!searchEntry) {
-          return res.status(404).json({ message: 'Search entry not found' });
+            return res.status(404).json({ message: 'Search entry not found' });
         }
-    
+
         return res.status(200).json(searchEntry);
-      } catch (error) {
+    } catch (error) {
         console.error('Error fetching search entry:', error);
         return res.status(500).json({ message: 'An error occurred' });
-      }
+    }
 };
-  
 
+// Delete user search history by searchId
+async function deleteUserSearchHistoryBySearchId(req, res) {
+    try {
+        const { searchId } = req.params;
+        const userId = req.userId;
+        // Find the user by their ID and delete the search history with the provided searchId
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const searchIndex = user.searchHistory.findIndex((search) => search.id === searchId);
+        if (searchIndex === -1) {
+            return res.status(404).json({ message: 'Search history not found' });
+        }
+
+        user.searchHistory.splice(searchIndex, 1);
+        await user.save();
+
+        res.status(200).json({ message: 'Search history deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 // Controller function for chat
 const chat = async (req, res) => {
@@ -227,5 +251,6 @@ module.exports = {
     updateUserSearchHistory,
     updateUserSearchHistoryTitleBySearchId,
     getUserSearchHistoryTitleBySearchId,
+    deleteUserSearchHistoryBySearchId,
     chat,
 };

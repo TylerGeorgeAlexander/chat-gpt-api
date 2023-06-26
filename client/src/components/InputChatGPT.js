@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 import { BsLayoutSidebarInset } from 'react-icons/bs';
 import { AiFillEdit, AiFillSave } from 'react-icons/ai';
+import { FiTrash2, FiCheck, FiX } from 'react-icons/fi'; // <-- import the new icons
 
 const InputChatGPT = () => {
   const [input, setInput] = useState('');
@@ -11,24 +12,19 @@ const InputChatGPT = () => {
   const navigate = useNavigate();
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
   const [editedTitle, setEditedTitle] = useState('');
-  const [isSidebarVisible, setIsSidebarVisible] = useState(
-    window.innerWidth >= 768
-  ); // Default to hidden on small screens
+  const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth >= 768); // Default to hidden on small screens
   const [activeSearchIndex, setActiveSearchIndex] = useState(null);
-
+  const [showConfirmation, setShowConfirmation] = useState(null); // New state for confirmation dialog
 
   const fetchSearchHistory = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/users/search-history`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-          },
-        }
-      );
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch search history');
       }
@@ -73,17 +69,14 @@ const InputChatGPT = () => {
         input: input,
       };
 
-      const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/users/chat`,
-        {
-          method: 'POST',
-          body: JSON.stringify(requestData),
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-          },
-        }
-      );
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/chat`, {
+        method: 'POST',
+        body: JSON.stringify(requestData),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      });
       if (!response.ok) {
         throw new Error('Failed to generate output');
       }
@@ -101,16 +94,13 @@ const InputChatGPT = () => {
 
   const restoreSearch = async (searchId) => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-          },
-        }
-      );
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch search history');
       }
@@ -135,6 +125,28 @@ const InputChatGPT = () => {
       fetchSearchHistory(); // Refresh search history
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const deleteUserSearchHistory = async (searchId) => {
+    try {
+      await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      });
+      fetchSearchHistory(); // Refresh search history
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (searchId) => {
+    const confirmed = window.confirm('Are you sure you want to delete this search history?');
+    if (confirmed) {
+      deleteUserSearchHistory(searchId);
     }
   };
 
@@ -163,59 +175,84 @@ const InputChatGPT = () => {
               <div
                 key={index}
                 className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${editingTitleIndex === index
-                    ? 'bg-blue-100'
-                    : activeSearchIndex === index
-                      ? 'bg-gray-300'
-                      : 'hover:bg-gray-200'
+                  ? 'bg-blue-100'
+                  : activeSearchIndex === index
+                    ? 'bg-gray-300'
+                    : 'hover:bg-gray-200'
                   }`}
               >
-                <button
-                  className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
-                  onClick={() => {
-                    setActiveSearchIndex(index);
-                    restoreSearch(search._id);
-                  }}
-                >
-                  {editingTitleIndex === index ? (
-                    <input
-                      type="text"
-                      value={editedTitle}
-                      onChange={(e) => setEditedTitle(e.target.value)}
-                      onBlur={() => {
-                        setEditingTitleIndex(null);
-                        updateTitle(search._id, editedTitle);
+                {showConfirmation === index ? (
+                  <>
+                    <button
+                      className="text-red-500 hover:text-red-700 ml-2"
+                      onClick={() => deleteUserSearchHistory(search._id)}
+                    >
+                      <FiCheck size={16} />
+                    </button>
+                    <button
+                      className="text-gray-500 hover:text-gray-700 ml-2"
+                      onClick={() => setShowConfirmation(null)}
+                    >
+                      <FiX size={16} />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="text-red-500 hover:text-red-700 ml-2"
+                      onClick={() => setShowConfirmation(index)}
+                    >
+                      <FiTrash2 size={16} />
+                    </button>
+                    <button
+                      className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
+                      onClick={() => {
+                        setActiveSearchIndex(index);
+                        restoreSearch(search._id);
                       }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
+                    >
+                      {editingTitleIndex === index ? (
+                        <input
+                          type="text"
+                          value={editedTitle}
+                          onChange={(e) => setEditedTitle(e.target.value)}
+                          onBlur={() => {
+                            setEditingTitleIndex(null);
+                            updateTitle(search._id, editedTitle);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              setEditingTitleIndex(null);
+                              updateTitle(search._id, editedTitle);
+                            }
+                          }}
+                        />
+                      ) : search.title && search.title.length > 12 ? (
+                        `${search.title.slice(0, 12)}...`
+                      ) : (
+                        search.title || search.query
+                      )}
+                    </button>
+                    <button
+                      className="text-gray-500 hover:text-gray-700 ml-2"
+                      onClick={() => {
+                        if (editingTitleIndex === index) {
                           setEditingTitleIndex(null);
                           updateTitle(search._id, editedTitle);
+                        } else {
+                          setEditingTitleIndex(index);
+                          setEditedTitle(search.title || search.query);
                         }
                       }}
-                    />
-                  ) : search.title && search.title.length > 12 ? (
-                    `${search.title.slice(0, 12)}...`
-                  ) : (
-                    search.title || search.query
-                  )}
-                </button>
-                <button
-                  className="text-gray-500 hover:text-gray-700 ml-2"
-                  onClick={() => {
-                    if (editingTitleIndex === index) {
-                      setEditingTitleIndex(null);
-                      updateTitle(search._id, editedTitle);
-                    } else {
-                      setEditingTitleIndex(index);
-                      setEditedTitle(search.title || search.query);
-                    }
-                  }}
-                >
-                  {editingTitleIndex === index ? (
-                    <AiFillSave size={16} />
-                  ) : (
-                    <AiFillEdit size={16} />
-                  )}
-                </button>
+                    >
+                      {editingTitleIndex === index ? (
+                        <AiFillSave size={16} />
+                      ) : (
+                        <AiFillEdit size={16} />
+                      )}
+                    </button>
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -247,13 +284,6 @@ const InputChatGPT = () => {
       </div>
     </div>
   );
-
-
-
-
-
-
-
 };
 
 export default InputChatGPT;
