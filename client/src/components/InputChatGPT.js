@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 import { BsLayoutSidebarInset } from 'react-icons/bs';
@@ -15,6 +15,7 @@ const InputChatGPT = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth >= 768); // Default to hidden on small screens
   const [activeSearchIndex, setActiveSearchIndex] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(null); // New state for confirmation dialog
+  const inputRef = useRef(null); // Ref for the input element
 
   const fetchSearchHistory = async () => {
     try {
@@ -143,6 +144,12 @@ const InputChatGPT = () => {
     }
   };
 
+  useEffect(() => {
+    if (editingTitleIndex !== null) {
+      // Focus the input box when editingTitleIndex changes
+      inputRef.current.focus();
+    }
+  }, [editingTitleIndex]);
 
   return (
     <div className="flex">
@@ -190,6 +197,7 @@ const InputChatGPT = () => {
                   >
                     {editingTitleIndex === index ? (
                       <input
+                        ref={inputRef}
                         type="text"
                         value={editedTitle}
                         onChange={(e) => setEditedTitle(e.target.value)}
@@ -261,9 +269,6 @@ const InputChatGPT = () => {
             ))}
           </div>
         )}
-
-
-
       </div>
 
       {/* Main content */}
