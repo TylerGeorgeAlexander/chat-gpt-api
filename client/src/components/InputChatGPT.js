@@ -259,14 +259,16 @@ const InputChatGPT = () => {
 
         {/* Search History */}
         {isSidebarVisible && (
-          <div className="p-4">
-            <button
-              className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center"
-              onClick={handleNewQuestionClick}
-            >
-              <FiPlus size={16} className="mr-1" />
-              New Question
-            </button>
+          <div className="p-4 flex flex-col">
+            <div className="flex justify-center m-4">
+              <button
+                className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center"
+                onClick={handleNewQuestionClick}
+              >
+                <FiPlus size={16} className="mr-1" />
+                New Question
+              </button>
+            </div>
             {searchHistory.map((search, index) => (
               <React.Fragment key={index}>
                 {index === 0 ||
