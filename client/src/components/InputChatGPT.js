@@ -62,19 +62,28 @@ const InputChatGPT = () => {
   const getRelativeTime = (timestamp) => {
     const now = new Date();
     const searchTime = new Date(timestamp);
-    const timeDiff = now.getTime() - searchTime.getTime();
-    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-    if (daysDiff === 1) {
-      return "Yesterday";
-    } else if (daysDiff <= 7) {
-      return "Previous 7 Days";
-    } else if (daysDiff <= 30) {
-      return "Previous 30 Days";
+    if (
+      now.getDate() === searchTime.getDate() &&
+      now.getMonth() === searchTime.getMonth()
+    ) {
+      return "Today";
     } else {
-      return "More than 30 Days";
+      const timeDiff = now.getTime() - searchTime.getTime();
+      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+      if (daysDiff === 1) {
+        return "Yesterday";
+      } else if (daysDiff <= 7) {
+        return "Previous 7 Days";
+      } else if (daysDiff <= 30) {
+        return "Previous 30 Days";
+      } else {
+        return "More than 30 Days";
+      }
     }
   };
+
 
   useEffect(() => {
     fetchSearchHistory();
@@ -229,9 +238,8 @@ const InputChatGPT = () => {
     <div className="flex">
       {/* Sidebar */}
       <div
-        className={`bg-gray-100 transition-all ease-in-out duration-300 ${
-          isSidebarVisible ? "w-64" : "w-16"
-        }`}
+        className={`bg-gray-100 transition-all ease-in-out duration-300 ${isSidebarVisible ? "w-64" : "w-16"
+          }`}
         style={{ height: "100vh" }}
       >
         {/* Toggle sidebar button */}
@@ -261,20 +269,19 @@ const InputChatGPT = () => {
             {searchHistory.map((search, index) => (
               <React.Fragment key={index}>
                 {index === 0 ||
-                search.relativeTime !==
+                  search.relativeTime !==
                   searchHistory[index - 1].relativeTime ? (
                   <div className="text-gray-500 mb-2">
                     {search.relativeTime}
                   </div>
                 ) : null}
                 <div
-                  className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${
-                    editingTitleIndex === index
+                  className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${editingTitleIndex === index
                       ? "bg-blue-100"
                       : activeSearchIndex === index
-                      ? "bg-gray-300"
-                      : "hover:bg-gray-200"
-                  }`}
+                        ? "bg-gray-300"
+                        : "hover:bg-gray-200"
+                    }`}
                 >
                   <div className="flex items-center">
                     {showConfirmation === index && (
