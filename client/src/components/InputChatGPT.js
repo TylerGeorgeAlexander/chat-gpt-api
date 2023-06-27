@@ -139,10 +139,12 @@ const InputChatGPT = () => {
         },
       });
       fetchSearchHistory(); // Refresh search history
+      setShowConfirmation(null); // Reset the showConfirmation state
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   useEffect(() => {
     if (editingTitleIndex !== null) {
