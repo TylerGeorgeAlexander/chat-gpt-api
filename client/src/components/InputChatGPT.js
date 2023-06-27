@@ -175,82 +175,95 @@ const InputChatGPT = () => {
                     : 'hover:bg-gray-200'
                   }`}
               >
-                {showConfirmation === index ? (
-                  <>
-                    <button
-                      className="text-gray-500 hover:text-gray-700 ml-2"
-                      onClick={() => deleteUserSearchHistory(search._id)}
-                    >
-                      <FiCheck size={16} />
-                    </button>
-                    <button
-                      className="text-gray-500 hover:text-gray-700 ml-2"
-                      onClick={() => setShowConfirmation(null)}
-                    >
-                      <FiX size={16} />
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
-                      onClick={() => {
-                        setActiveSearchIndex(index);
-                        restoreSearch(search._id);
-                      }}
-                    >
-                      {editingTitleIndex === index ? (
-                        <input
-                          type="text"
-                          value={editedTitle}
-                          onChange={(e) => setEditedTitle(e.target.value)}
-                          onBlur={() => {
-                            setEditingTitleIndex(null);
-                            updateTitle(search._id, editedTitle);
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              setEditingTitleIndex(null);
-                              updateTitle(search._id, editedTitle);
-                            }
-                          }}
-                        />
-                      ) : search.title && search.title.length > 12 ? (
-                        `${search.title.slice(0, 12)}...`
-                      ) : (
-                        search.title || search.query
-                      )}
-                    </button>
-                    <button
-                      className="text-gray-500 hover:text-gray-700 ml-2"
-                      onClick={() => {
-                        if (editingTitleIndex === index) {
+                <div className="flex items-center">
+                  {showConfirmation === index && (
+                    <span className="text-gray-500 hover:text-gray-700 mr-2">
+                      <FiTrash2 size={16} />
+                    </span>
+                  )}
+                  <button
+                    className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
+                    onClick={() => {
+                      setActiveSearchIndex(index);
+                      restoreSearch(search._id);
+                    }}
+                  >
+                    {editingTitleIndex === index ? (
+                      <input
+                        type="text"
+                        value={editedTitle}
+                        onChange={(e) => setEditedTitle(e.target.value)}
+                        onBlur={() => {
                           setEditingTitleIndex(null);
                           updateTitle(search._id, editedTitle);
-                        } else {
-                          setEditingTitleIndex(index);
-                          setEditedTitle(search.title || search.query);
-                        }
-                      }}
-                    >
-                      {editingTitleIndex === index ? (
-                        <AiFillSave size={16} />
-                      ) : (
-                        <AiFillEdit size={16} />
-                      )}
-                    </button>
-                    <button
-                      className="text-gray-500 hover:text-gray-700 ml-2"
-                      onClick={() => setShowConfirmation(index)}
-                    >
-                      <FiTrash2 size={16} />
-                    </button>
-                  </>
-                )}
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setEditingTitleIndex(null);
+                            updateTitle(search._id, editedTitle);
+                          }
+                        }}
+                      />
+                    ) : search.title && search.title.length > 12 ? (
+                      `${search.title.slice(0, 12)}...`
+                    ) : (
+                      search.title || search.query
+                    )}
+                  </button>
+                </div>
+                <div>
+                  {showConfirmation !== index && (
+                    <>
+                      <button
+                        className="text-gray-500 hover:text-gray-700 ml-2"
+                        onClick={() => {
+                          if (editingTitleIndex === index) {
+                            setEditingTitleIndex(null);
+                            updateTitle(search._id, editedTitle);
+                          } else {
+                            setEditingTitleIndex(index);
+                            setEditedTitle(search.title || search.query);
+                          }
+                        }}
+                      >
+                        {editingTitleIndex === index ? (
+                          <AiFillSave size={16} />
+                        ) : (
+                          <AiFillEdit size={16} />
+                        )}
+                      </button>
+                      <button
+                        className="text-gray-500 hover:text-gray-700 ml-2"
+                        onClick={() => setShowConfirmation(index)}
+                      >
+                        <FiTrash2 size={16} />
+                      </button>
+                    </>
+                  )}
+                  {showConfirmation === index && (
+                    <>
+                      <button
+                        className="text-gray-500 hover:text-gray-700 ml-2"
+                        onClick={() => deleteUserSearchHistory(search._id)}
+                      >
+                        <FiCheck size={16} />
+                      </button>
+                      <button
+                        className="text-gray-500 hover:text-gray-700 ml-2"
+                        onClick={() => setShowConfirmation(null)}
+                      >
+                        <FiX size={16} />
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             ))}
           </div>
         )}
+
+
+
       </div>
 
       {/* Main content */}
