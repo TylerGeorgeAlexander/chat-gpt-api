@@ -32,13 +32,16 @@ const InputChatGPT = () => {
         throw new Error('Failed to fetch search history');
       }
       const data = await response.json();
-      setSearchHistory(data.searchHistory);
+      const sortedHistory = data.searchHistory.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      setSearchHistory(sortedHistory);
     } catch (error) {
       console.error(error);
       // Redirect to login if unauthorized or error occurs
       navigate('/login');
     }
   };
+  
+
 
   useEffect(() => {
     fetchSearchHistory();
