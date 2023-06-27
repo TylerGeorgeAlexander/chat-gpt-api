@@ -1,19 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { useNavigate } from 'react-router-dom';
-import { BsLayoutSidebarInset, BsLayoutSidebarInsetReverse } from 'react-icons/bs';
-import { AiFillEdit, AiFillSave } from 'react-icons/ai';
-import { FiTrash2, FiCheck, FiX, FiPlus } from 'react-icons/fi'; // <-- import the new icons
-import FlashCard from './FlashCard';
+import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import { useNavigate } from "react-router-dom";
+import {
+  BsLayoutSidebarInset,
+  BsLayoutSidebarInsetReverse,
+} from "react-icons/bs";
+import { AiFillEdit, AiFillSave } from "react-icons/ai";
+import { FiTrash2, FiCheck, FiX, FiPlus } from "react-icons/fi"; // <-- import the new icons
+import FlashCard from "./FlashCard";
 
 const InputChatGPT = () => {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
   const [searchHistory, setSearchHistory] = useState([]);
   const navigate = useNavigate();
   const [editingTitleIndex, setEditingTitleIndex] = useState(null);
-  const [editedTitle, setEditedTitle] = useState('');
-  const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth >= 768); // Default to hidden on small screens
+  const [editedTitle, setEditedTitle] = useState("");
+  const [isSidebarVisible, setIsSidebarVisible] = useState(
+    window.innerWidth >= 768
+  ); // Default to hidden on small screens
   const [activeSearchIndex, setActiveSearchIndex] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(null); // New state for confirmation dialog
   const inputRef = useRef(null); // Ref for the input element
@@ -21,31 +26,36 @@ const InputChatGPT = () => {
 
   const fetchSearchHistory = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/api/users/search-history`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch search history');
+        throw new Error("Failed to fetch search history");
       }
       const data = await response.json();
-      const sortedHistory = data.searchHistory.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      const formattedHistory = sortedHistory.map(search => {
+      const sortedHistory = data.searchHistory.sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      );
+      const formattedHistory = sortedHistory.map((search) => {
         const relativeTime = getRelativeTime(search.timestamp);
         return {
           ...search,
-          relativeTime
+          relativeTime,
         };
       });
       setSearchHistory(formattedHistory);
-      console.log(formattedHistory)
+      console.log(formattedHistory);
     } catch (error) {
       console.error(error);
       // Redirect to login if unauthorized or error occurs
-      navigate('/login');
+      navigate("/login");
     }
   };
 
@@ -56,16 +66,15 @@ const InputChatGPT = () => {
     const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
     if (daysDiff === 1) {
-      return 'Yesterday';
+      return "Yesterday";
     } else if (daysDiff <= 7) {
-      return 'Previous 7 Days';
+      return "Previous 7 Days";
     } else if (daysDiff <= 30) {
-      return 'Previous 30 Days';
+      return "Previous 30 Days";
     } else {
-      return 'More than 30 Days';
+      return "More than 30 Days";
     }
   };
-
 
   useEffect(() => {
     fetchSearchHistory();
@@ -74,18 +83,21 @@ const InputChatGPT = () => {
 
   const updateSearchHistory = async (query, assertion, title) => {
     try {
-      await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history`, {
-        method: 'POST',
-        body: JSON.stringify({ query, assertion, title }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        },
-      });
+      await fetch(
+        `${process.env.REACT_APP_BASE_URL}/api/users/search-history`,
+        {
+          method: "POST",
+          body: JSON.stringify({ query, assertion, title }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
       fetchSearchHistory(); // Refresh search history
     } catch (error) {
       console.error(error);
-      navigate('/login');
+      navigate("/login");
     }
   };
 
@@ -99,16 +111,19 @@ const InputChatGPT = () => {
         input: input,
       };
 
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/chat`, {
-        method: 'POST',
-        body: JSON.stringify(requestData),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/api/users/chat`,
+        {
+          method: "POST",
+          body: JSON.stringify(requestData),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to generate output');
+        throw new Error("Failed to generate output");
       }
       const data = await response.json();
       setOutput(data.output);
@@ -118,21 +133,24 @@ const InputChatGPT = () => {
     } catch (error) {
       console.error(error);
       // Redirect to login if unauthorized or error occurs
-      navigate('/login');
+      navigate("/login");
     }
   };
 
   const restoreSearch = async (searchId) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch search history');
+        throw new Error("Failed to fetch search history");
       }
       const search = await response.json();
       setInput(search.query);
@@ -146,14 +164,17 @@ const InputChatGPT = () => {
 
   const updateTitle = async (searchId, title) => {
     try {
-      await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`, {
-        method: 'PUT',
-        body: JSON.stringify({ title }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        },
-      });
+      await fetch(
+        `${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ title }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
       fetchSearchHistory(); // Refresh search history
       setSelectedSearch((prevSearch) => ({ ...prevSearch, title })); // Update the title in selectedSearch
     } catch (error) {
@@ -163,13 +184,16 @@ const InputChatGPT = () => {
 
   const deleteUserSearchHistory = async (searchId) => {
     try {
-      await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        },
-      });
+      await fetch(
+        `${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
       fetchSearchHistory(); // Refresh search history
       setShowConfirmation(null); // Reset the showConfirmation state
     } catch (error) {
@@ -179,8 +203,9 @@ const InputChatGPT = () => {
 
   const handleNewQuestionClick = () => {
     setSelectedSearch(null);
-    setInput('');
-    setOutput('')
+    setInput("");
+    setOutput("");
+    setActiveSearchIndex(null); // Deselect the current title
   };
 
   useEffect(() => {
@@ -193,7 +218,10 @@ const InputChatGPT = () => {
   useEffect(() => {
     if (selectedSearch) {
       // Update the selectedSearch when editingTitleIndex changes
-      setSelectedSearch((prevSearch) => ({ ...prevSearch, title: editedTitle }));
+      setSelectedSearch((prevSearch) => ({
+        ...prevSearch,
+        title: editedTitle,
+      }));
     }
   }, [editingTitleIndex]);
 
@@ -202,9 +230,9 @@ const InputChatGPT = () => {
       {/* Sidebar */}
       <div
         className={`bg-gray-100 transition-all ease-in-out duration-300 ${
-          isSidebarVisible ? 'w-64' : 'w-16'
+          isSidebarVisible ? "w-64" : "w-16"
         }`}
-        style={{ height: '100vh' }}
+        style={{ height: "100vh" }}
       >
         {/* Toggle sidebar button */}
         <div className="p-4 flex justify-center items-center">
@@ -219,11 +247,11 @@ const InputChatGPT = () => {
             )}
           </button>
         </div>
-  
+
         {/* Search History */}
         {isSidebarVisible && (
           <div className="p-4">
-         <button
+            <button
               className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center"
               onClick={handleNewQuestionClick}
             >
@@ -232,16 +260,20 @@ const InputChatGPT = () => {
             </button>
             {searchHistory.map((search, index) => (
               <React.Fragment key={index}>
-                {index === 0 || search.relativeTime !== searchHistory[index - 1].relativeTime ? (
-                  <div className="text-gray-500 mb-2">{search.relativeTime}</div>
+                {index === 0 ||
+                search.relativeTime !==
+                  searchHistory[index - 1].relativeTime ? (
+                  <div className="text-gray-500 mb-2">
+                    {search.relativeTime}
+                  </div>
                 ) : null}
                 <div
                   className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${
                     editingTitleIndex === index
-                      ? 'bg-blue-100'
+                      ? "bg-blue-100"
                       : activeSearchIndex === index
-                      ? 'bg-gray-300'
-                      : 'hover:bg-gray-200'
+                      ? "bg-gray-300"
+                      : "hover:bg-gray-200"
                   }`}
                 >
                   <div className="flex items-center">
@@ -268,7 +300,7 @@ const InputChatGPT = () => {
                             updateTitle(search._id, editedTitle);
                           }}
                           onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
+                            if (e.key === "Enter") {
                               setEditingTitleIndex(null);
                               updateTitle(search._id, editedTitle);
                             }
@@ -335,7 +367,7 @@ const InputChatGPT = () => {
           </div>
         )}
       </div>
-  
+
       {/* Container for Main Content and Flash Card */}
       <div className="flex flex-col w-full">
         {/* Main content */}
@@ -365,7 +397,7 @@ const InputChatGPT = () => {
             </div>
           </div>
         )}
-  
+
         {/* Flash Card section */}
         {selectedSearch && (
           <div className="px-4 py-6 flex-1">
@@ -380,9 +412,6 @@ const InputChatGPT = () => {
       </div>
     </div>
   );
-  
-
 };
-
 
 export default InputChatGPT;
