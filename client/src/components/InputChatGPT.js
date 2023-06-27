@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 import { BsLayoutSidebarInset, BsLayoutSidebarInsetReverse } from 'react-icons/bs';
 import { AiFillEdit, AiFillSave } from 'react-icons/ai';
-import { FiTrash2, FiCheck, FiX } from 'react-icons/fi'; // <-- import the new icons
+import { FiTrash2, FiCheck, FiX, FiPlus } from 'react-icons/fi'; // <-- import the new icons
 import FlashCard from './FlashCard';
 
 const InputChatGPT = () => {
@@ -223,10 +223,11 @@ const InputChatGPT = () => {
         {/* Search History */}
         {isSidebarVisible && (
           <div className="p-4">
-            <button
-              className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+         <button
+              className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center"
               onClick={handleNewQuestionClick}
             >
+              <FiPlus size={16} className="mr-1" />
               New Question
             </button>
             {searchHistory.map((search, index) => (
