@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
-import { BsLayoutSidebarInset } from 'react-icons/bs';
+import { BsLayoutSidebarInset, BsLayoutSidebarInsetReverse } from 'react-icons/bs';
 import { AiFillEdit, AiFillSave } from 'react-icons/ai';
 import { FiTrash2, FiCheck, FiX } from 'react-icons/fi'; // <-- import the new icons
 import FlashCard from './FlashCard';
@@ -161,17 +161,18 @@ const InputChatGPT = () => {
     <div className="flex">
       {/* Sidebar */}
       <div
-        className={`bg-gray-100 transition-all duration-300 ${isSidebarVisible ? 'w-3/12' : 'w-12'
+        className={`bg-gray-100 transition-all ease-in-out duration-300 ${isSidebarVisible ? 'w-64' : 'w-16'
           }`}
         style={{ height: '100vh' }}
       >
+
         {/* Toggle sidebar button */}
-        <div className="p-4">
+        <div className="p-4 flex justify-center items-center">
           <button
-            className="text-black hover:text-gray-300 mb-4"
+            className="text-black hover:bg-gray-300 p-2 rounded-full"
             onClick={() => setIsSidebarVisible(!isSidebarVisible)}
           >
-            <BsLayoutSidebarInset size={24} />
+            {isSidebarVisible ? <BsLayoutSidebarInsetReverse size={24} /> : <BsLayoutSidebarInset size={24} />}
           </button>
         </div>
 
@@ -277,50 +278,50 @@ const InputChatGPT = () => {
         )}
       </div>
 
-      {/* Main content */}
-      <div className="container">
-        {/* Input chatGPT Prompt */}
-        <div className="row">
-          <div className="w-full px-4 flex-1 text-center">
-            <div className="flex flex-col gap-2 mt-4">
-              <label htmlFor="chat-prompt" className="font-bold">
-                Input chatGPT prompt(s):
-              </label>
-              <textarea
-                id="chat-prompt"
-                className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
-                value={input}
-                onChange={handleChange}
-              />
-              <button
-                className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                onClick={handleClick}
-              >
-                Generate
-              </button>
-              <div className="prose">
-                <ReactMarkdown>{`${output}`}</ReactMarkdown>
-              </div>
+      {/* Container for Main Content and Flash Card */}
+      <div className="flex flex-col w-full">
+
+        {/* Main content */}
+        <div className="px-4 py-6 flex-1 text-center">
+          <div className="flex flex-col gap-4">
+            <label htmlFor="chat-prompt" className="font-bold text-lg">
+              Input chatGPT prompt(s):
+            </label>
+            <textarea
+              id="chat-prompt"
+              className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+              value={input}
+              onChange={handleChange}
+            />
+            <button
+              className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={handleClick}
+            >
+              Generate
+            </button>
+            <div className="prose">
+              <ReactMarkdown>{`${output}`}</ReactMarkdown>
             </div>
           </div>
         </div>
 
         {/* Flash Card section */}
-        <div className="row">
-          {selectedSearch && (
-            <div className="flex-1">
-              <FlashCard
-                title={selectedSearch.title || selectedSearch.query}
-                query={selectedSearch.query}
-                assertion={selectedSearch.assertion}
-                timestamp={selectedSearch.timestamp}
-              />
-            </div>
-          )}
-        </div>
+        {selectedSearch && (
+          <div className="px-4 py-6 flex-1">
+            <FlashCard
+              title={selectedSearch.title || selectedSearch.query}
+              query={selectedSearch.query}
+              assertion={selectedSearch.assertion}
+              timestamp={selectedSearch.timestamp}
+            />
+          </div>
+        )}
+
       </div>
     </div>
   );
+
+
 
 };
 
