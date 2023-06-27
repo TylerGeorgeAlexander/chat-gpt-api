@@ -150,6 +150,11 @@ const InputChatGPT = () => {
     }
   };
 
+  const handleNewQuestionClick = () => {
+    setSelectedSearch(null);
+    setInput('');
+    setOutput('')
+  };
 
   useEffect(() => {
     if (editingTitleIndex !== null) {
@@ -186,6 +191,12 @@ const InputChatGPT = () => {
         {/* Search History */}
         {isSidebarVisible && (
           <div className="p-4">
+            <button
+              className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={handleNewQuestionClick}
+            >
+              New Question
+            </button>
             {searchHistory.map((search, index) => (
               <div
                 key={index}
@@ -291,7 +302,7 @@ const InputChatGPT = () => {
       <div className="flex flex-col w-full">
 
         {/* Main content */}
-        <div className="px-4 py-6 flex-1 text-center">
+        {!selectedSearch && <div className="px-4 py-6 flex-1 text-center">
 
           <div className="bg-white shadow-md rounded p-4 m-4">
             <div className="flex flex-col gap-4">
@@ -316,7 +327,7 @@ const InputChatGPT = () => {
             </div>
 
           </div>
-        </div>
+        </div>}
 
         {/* Flash Card section */}
         {selectedSearch && (
