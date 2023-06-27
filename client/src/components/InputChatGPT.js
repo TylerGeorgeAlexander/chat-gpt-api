@@ -33,14 +33,38 @@ const InputChatGPT = () => {
       }
       const data = await response.json();
       const sortedHistory = data.searchHistory.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      setSearchHistory(sortedHistory);
+      const formattedHistory = sortedHistory.map(search => {
+        const relativeTime = getRelativeTime(search.timestamp);
+        return {
+          ...search,
+          relativeTime
+        };
+      });
+      setSearchHistory(formattedHistory);
+      console.log(formattedHistory)
     } catch (error) {
       console.error(error);
       // Redirect to login if unauthorized or error occurs
       navigate('/login');
     }
   };
-  
+
+  const getRelativeTime = (timestamp) => {
+    const now = new Date();
+    const searchTime = new Date(timestamp);
+    const timeDiff = now.getTime() - searchTime.getTime();
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    if (daysDiff === 1) {
+      return 'Yesterday';
+    } else if (daysDiff <= 7) {
+      return 'Previous 7 Days';
+    } else if (daysDiff <= 30) {
+      return 'Previous 30 Days';
+    } else {
+      return 'More than 30 Days';
+    }
+  };
 
 
   useEffect(() => {
@@ -177,8 +201,9 @@ const InputChatGPT = () => {
     <div className="flex">
       {/* Sidebar */}
       <div
-        className={`bg-gray-100 transition-all ease-in-out duration-300 ${isSidebarVisible ? 'w-64' : 'w-16'
-          }`}
+        className={`bg-gray-100 transition-all ease-in-out duration-300 ${
+          isSidebarVisible ? 'w-64' : 'w-16'
+        }`}
         style={{ height: '100vh' }}
       >
         {/* Toggle sidebar button */}
@@ -187,10 +212,14 @@ const InputChatGPT = () => {
             className="text-black hover:bg-gray-300 p-2 rounded-full"
             onClick={() => setIsSidebarVisible(!isSidebarVisible)}
           >
-            {isSidebarVisible ? <BsLayoutSidebarInsetReverse size={24} /> : <BsLayoutSidebarInset size={24} />}
+            {isSidebarVisible ? (
+              <BsLayoutSidebarInsetReverse size={24} />
+            ) : (
+              <BsLayoutSidebarInset size={24} />
+            )}
           </button>
         </div>
-
+  
         {/* Search History */}
         {isSidebarVisible && (
           <div className="p-4">
@@ -201,137 +230,141 @@ const InputChatGPT = () => {
               New Question
             </button>
             {searchHistory.map((search, index) => (
-              <div
-                key={index}
-                className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${editingTitleIndex === index
-                  ? 'bg-blue-100'
-                  : activeSearchIndex === index
-                    ? 'bg-gray-300'
-                    : 'hover:bg-gray-200'
+              <React.Fragment key={index}>
+                {index === 0 || search.relativeTime !== searchHistory[index - 1].relativeTime ? (
+                  <div className="text-gray-500 mb-2">{search.relativeTime}</div>
+                ) : null}
+                <div
+                  className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${
+                    editingTitleIndex === index
+                      ? 'bg-blue-100'
+                      : activeSearchIndex === index
+                      ? 'bg-gray-300'
+                      : 'hover:bg-gray-200'
                   }`}
-              >
-                <div className="flex items-center">
-                  {showConfirmation === index && (
-                    <span className="text-gray-500 hover:text-gray-700 mr-2">
-                      <FiTrash2 size={16} />
-                    </span>
-                  )}
-                  <button
-                    className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
-                    onClick={() => {
-                      setActiveSearchIndex(index);
-                      restoreSearch(search._id);
-                    }}
-                  >
-                    {editingTitleIndex === index ? (
-                      <input
-                        ref={inputRef}
-                        type="text"
-                        value={editedTitle}
-                        onChange={(e) => setEditedTitle(e.target.value)}
-                        onBlur={() => {
-                          setEditingTitleIndex(null);
-                          updateTitle(search._id, editedTitle);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            setEditingTitleIndex(null);
-                            updateTitle(search._id, editedTitle);
-                          }
-                        }}
-                      />
-                    ) : search.title && search.title.length > 12 ? (
-                      `${search.title.slice(0, 12)}...`
-                    ) : (
-                      search.title || search.query
+                >
+                  <div className="flex items-center">
+                    {showConfirmation === index && (
+                      <span className="text-gray-500 hover:text-gray-700 mr-2">
+                        <FiTrash2 size={16} />
+                      </span>
                     )}
-                  </button>
-                </div>
-                <div>
-                  {showConfirmation !== index && (
-                    <>
-                      <button
-                        className="text-gray-500 hover:text-gray-700 ml-2"
-                        onClick={() => {
-                          if (editingTitleIndex === index) {
+                    <button
+                      className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
+                      onClick={() => {
+                        setActiveSearchIndex(index);
+                        restoreSearch(search._id);
+                      }}
+                    >
+                      {editingTitleIndex === index ? (
+                        <input
+                          ref={inputRef}
+                          type="text"
+                          value={editedTitle}
+                          onChange={(e) => setEditedTitle(e.target.value)}
+                          onBlur={() => {
                             setEditingTitleIndex(null);
                             updateTitle(search._id, editedTitle);
-                          } else {
-                            setEditingTitleIndex(index);
-                            setEditedTitle(search.title || search.query);
-                          }
-                        }}
-                      >
-                        {editingTitleIndex === index ? (
-                          <AiFillSave size={16} />
-                        ) : (
-                          <AiFillEdit size={16} />
-                        )}
-                      </button>
-                      {editingTitleIndex !== index && (
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              setEditingTitleIndex(null);
+                              updateTitle(search._id, editedTitle);
+                            }
+                          }}
+                        />
+                      ) : search.title && search.title.length > 12 ? (
+                        `${search.title.slice(0, 12)}...`
+                      ) : (
+                        search.title || search.query
+                      )}
+                    </button>
+                  </div>
+                  <div>
+                    {showConfirmation !== index && (
+                      <>
                         <button
                           className="text-gray-500 hover:text-gray-700 ml-2"
-                          onClick={() => setShowConfirmation(index)}
+                          onClick={() => {
+                            if (editingTitleIndex === index) {
+                              setEditingTitleIndex(null);
+                              updateTitle(search._id, editedTitle);
+                            } else {
+                              setEditingTitleIndex(index);
+                              setEditedTitle(search.title || search.query);
+                            }
+                          }}
                         >
-                          <FiTrash2 size={16} />
+                          {editingTitleIndex === index ? (
+                            <AiFillSave size={16} />
+                          ) : (
+                            <AiFillEdit size={16} />
+                          )}
                         </button>
-                      )}
-                    </>
-                  )}
-                  {showConfirmation === index && (
-                    <>
-                      <button
-                        className="text-gray-500 hover:text-gray-700 ml-2"
-                        onClick={() => deleteUserSearchHistory(search._id)}
-                      >
-                        <FiCheck size={16} />
-                      </button>
-                      <button
-                        className="text-gray-500 hover:text-gray-700 ml-2"
-                        onClick={() => setShowConfirmation(null)}
-                      >
-                        <FiX size={16} />
-                      </button>
-                    </>
-                  )}
+                        {editingTitleIndex !== index && (
+                          <button
+                            className="text-gray-500 hover:text-gray-700 ml-2"
+                            onClick={() => setShowConfirmation(index)}
+                          >
+                            <FiTrash2 size={16} />
+                          </button>
+                        )}
+                      </>
+                    )}
+                    {showConfirmation === index && (
+                      <>
+                        <button
+                          className="text-gray-500 hover:text-gray-700 ml-2"
+                          onClick={() => deleteUserSearchHistory(search._id)}
+                        >
+                          <FiCheck size={16} />
+                        </button>
+                        <button
+                          className="text-gray-500 hover:text-gray-700 ml-2"
+                          onClick={() => setShowConfirmation(null)}
+                        >
+                          <FiX size={16} />
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </React.Fragment>
             ))}
           </div>
         )}
       </div>
-
+  
       {/* Container for Main Content and Flash Card */}
       <div className="flex flex-col w-full">
-
         {/* Main content */}
-        {!selectedSearch && <div className="px-4 py-6 flex-1 text-center">
-
-          <div className="bg-white shadow-md rounded p-4 m-4">
-            <div className="flex flex-col gap-4">
-              <label htmlFor="chat-prompt" className="font-bold text-lg">
-                Input chatGPT prompt(s):
-              </label>
-              <textarea
-                id="chat-prompt"
-                className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
-                value={input}
-                onChange={handleChange}
-              />
-              <button
-                className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                onClick={handleClick}
-              >
-                Generate
-              </button>
-              <div className="prose">
-                <ReactMarkdown>{`${output}`}</ReactMarkdown>
+        {!selectedSearch && (
+          <div className="px-4 py-6 flex-1 text-center">
+            <div className="bg-white shadow-md rounded p-4 m-4">
+              <div className="flex flex-col gap-4">
+                <label htmlFor="chat-prompt" className="font-bold text-lg">
+                  Input chatGPT prompt(s):
+                </label>
+                <textarea
+                  id="chat-prompt"
+                  className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+                  value={input}
+                  onChange={handleChange}
+                />
+                <button
+                  className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  onClick={handleClick}
+                >
+                  Generate
+                </button>
+                <div className="prose">
+                  <ReactMarkdown>{`${output}`}</ReactMarkdown>
+                </div>
               </div>
             </div>
-
           </div>
-        </div>}
-
+        )}
+  
         {/* Flash Card section */}
         {selectedSearch && (
           <div className="px-4 py-6 flex-1">
@@ -343,10 +376,10 @@ const InputChatGPT = () => {
             />
           </div>
         )}
-
       </div>
     </div>
   );
+  
 
 };
 
