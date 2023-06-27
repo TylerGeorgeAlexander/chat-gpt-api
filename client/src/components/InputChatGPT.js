@@ -165,7 +165,6 @@ const InputChatGPT = () => {
           }`}
         style={{ height: '100vh' }}
       >
-
         {/* Toggle sidebar button */}
         <div className="p-4 flex justify-center items-center">
           <button
@@ -247,12 +246,14 @@ const InputChatGPT = () => {
                           <AiFillEdit size={16} />
                         )}
                       </button>
-                      <button
-                        className="text-gray-500 hover:text-gray-700 ml-2"
-                        onClick={() => setShowConfirmation(index)}
-                      >
-                        <FiTrash2 size={16} />
-                      </button>
+                      {editingTitleIndex !== index && (
+                        <button
+                          className="text-gray-500 hover:text-gray-700 ml-2"
+                          onClick={() => setShowConfirmation(index)}
+                        >
+                          <FiTrash2 size={16} />
+                        </button>
+                      )}
                     </>
                   )}
                   {showConfirmation === index && (
@@ -320,6 +321,7 @@ const InputChatGPT = () => {
       </div>
     </div>
   );
+
 
 
 
