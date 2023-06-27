@@ -161,9 +161,8 @@ const InputChatGPT = () => {
     <div className="flex">
       {/* Sidebar */}
       <div
-        className={`bg-gray-100 transition-all duration-300 ${
-          isSidebarVisible ? 'w-3/12' : 'w-12'
-        }`}
+        className={`bg-gray-100 transition-all duration-300 ${isSidebarVisible ? 'w-3/12' : 'w-12'
+          }`}
         style={{ height: '100vh' }}
       >
         {/* Toggle sidebar button */}
@@ -175,20 +174,19 @@ const InputChatGPT = () => {
             <BsLayoutSidebarInset size={24} />
           </button>
         </div>
-  
+
         {/* Search History */}
         {isSidebarVisible && (
           <div className="p-4">
             {searchHistory.map((search, index) => (
               <div
                 key={index}
-                className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${
-                  editingTitleIndex === index
-                    ? 'bg-blue-100'
-                    : activeSearchIndex === index
+                className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${editingTitleIndex === index
+                  ? 'bg-blue-100'
+                  : activeSearchIndex === index
                     ? 'bg-gray-300'
                     : 'hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 <div className="flex items-center">
                   {showConfirmation === index && (
@@ -278,43 +276,52 @@ const InputChatGPT = () => {
           </div>
         )}
       </div>
-  
+
       {/* Main content */}
-      <div className="w-full px-4 flex-1 text-center">
-        <div className="flex flex-col gap-2 mt-4">
-          <label htmlFor="chat-prompt" className="font-bold">
-            Input chatGPT prompt(s):
-          </label>
-          <textarea
-            id="chat-prompt"
-            className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
-            value={input}
-            onChange={handleChange}
-          />
-          <button
-            className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            onClick={handleClick}
-          >
-            Generate
-          </button>
-          <div className="prose">
-            <ReactMarkdown>{`${output}`}</ReactMarkdown>
+      <div className="container">
+        {/* Input chatGPT Prompt */}
+        <div className="row">
+          <div className="w-full px-4 flex-1 text-center">
+            <div className="flex flex-col gap-2 mt-4">
+              <label htmlFor="chat-prompt" className="font-bold">
+                Input chatGPT prompt(s):
+              </label>
+              <textarea
+                id="chat-prompt"
+                className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+                value={input}
+                onChange={handleChange}
+              />
+              <button
+                className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                onClick={handleClick}
+              >
+                Generate
+              </button>
+              <div className="prose">
+                <ReactMarkdown>{`${output}`}</ReactMarkdown>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Flash Card section */}
+        <div className="row">
+          {selectedSearch && (
+            <div className="flex-1">
+              <FlashCard
+                title={selectedSearch.title || selectedSearch.query}
+                query={selectedSearch.query}
+                assertion={selectedSearch.assertion}
+                timestamp={selectedSearch.timestamp}
+              />
+            </div>
+          )}
+        </div>
       </div>
-      
-      {/* Flash Card section */}
-      {selectedSearch && (
-        <FlashCard
-          title={selectedSearch.title || selectedSearch.query}
-          query={selectedSearch.query}
-          assertion={selectedSearch.assertion}
-          timestamp={selectedSearch.timestamp}
-        />
-      )}
     </div>
   );
-  
+
 };
 
 export default InputChatGPT;
