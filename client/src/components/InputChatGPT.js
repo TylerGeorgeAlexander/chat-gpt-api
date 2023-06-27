@@ -193,12 +193,6 @@ const InputChatGPT = () => {
                 ) : (
                   <>
                     <button
-                      className="text-gray-500 hover:text-gray-700 ml-2"
-                      onClick={() => setShowConfirmation(index)}
-                    >
-                      <FiTrash2 size={16} />
-                    </button>
-                    <button
                       className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
                       onClick={() => {
                         setActiveSearchIndex(index);
@@ -244,6 +238,12 @@ const InputChatGPT = () => {
                       ) : (
                         <AiFillEdit size={16} />
                       )}
+                    </button>
+                    <button
+                      className="text-gray-500 hover:text-gray-700 ml-2"
+                      onClick={() => setShowConfirmation(index)}
+                    >
+                      <FiTrash2 size={16} />
                     </button>
                   </>
                 )}
