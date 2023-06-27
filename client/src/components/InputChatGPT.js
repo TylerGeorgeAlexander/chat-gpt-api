@@ -128,6 +128,7 @@ const InputChatGPT = () => {
         },
       });
       fetchSearchHistory(); // Refresh search history
+      setSelectedSearch((prevSearch) => ({ ...prevSearch, title })); // Update the title in selectedSearch
     } catch (error) {
       console.error(error);
     }
@@ -154,6 +155,13 @@ const InputChatGPT = () => {
     if (editingTitleIndex !== null) {
       // Focus the input box when editingTitleIndex changes
       inputRef.current.focus();
+    }
+  }, [editingTitleIndex]);
+
+  useEffect(() => {
+    if (selectedSearch) {
+      // Update the selectedSearch when editingTitleIndex changes
+      setSelectedSearch((prevSearch) => ({ ...prevSearch, title: editedTitle }));
     }
   }, [editingTitleIndex]);
 
@@ -284,25 +292,29 @@ const InputChatGPT = () => {
 
         {/* Main content */}
         <div className="px-4 py-6 flex-1 text-center">
-          <div className="flex flex-col gap-4">
-            <label htmlFor="chat-prompt" className="font-bold text-lg">
-              Input chatGPT prompt(s):
-            </label>
-            <textarea
-              id="chat-prompt"
-              className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
-              value={input}
-              onChange={handleChange}
-            />
-            <button
-              className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              onClick={handleClick}
-            >
-              Generate
-            </button>
-            <div className="prose">
-              <ReactMarkdown>{`${output}`}</ReactMarkdown>
+
+          <div className="bg-white shadow-md rounded p-4 m-4">
+            <div className="flex flex-col gap-4">
+              <label htmlFor="chat-prompt" className="font-bold text-lg">
+                Input chatGPT prompt(s):
+              </label>
+              <textarea
+                id="chat-prompt"
+                className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+                value={input}
+                onChange={handleChange}
+              />
+              <button
+                className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                onClick={handleClick}
+              >
+                Generate
+              </button>
+              <div className="prose">
+                <ReactMarkdown>{`${output}`}</ReactMarkdown>
+              </div>
             </div>
+
           </div>
         </div>
 
@@ -322,9 +334,7 @@ const InputChatGPT = () => {
     </div>
   );
 
-
-
-
 };
+
 
 export default InputChatGPT;
