@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { BsLayoutSidebarInset } from 'react-icons/bs';
 import { AiFillEdit, AiFillSave } from 'react-icons/ai';
 import { FiTrash2, FiCheck, FiX } from 'react-icons/fi'; // <-- import the new icons
+import FlashCard from './FlashCard';
 
 const InputChatGPT = () => {
   const [input, setInput] = useState('');
@@ -16,6 +17,7 @@ const InputChatGPT = () => {
   const [activeSearchIndex, setActiveSearchIndex] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(null); // New state for confirmation dialog
   const inputRef = useRef(null); // Ref for the input element
+  const [selectedSearch, setSelectedSearch] = useState(null);
 
   const fetchSearchHistory = async () => {
     try {
@@ -108,6 +110,8 @@ const InputChatGPT = () => {
       const search = await response.json();
       setInput(search.query);
       setOutput(search.assertion);
+      // Set the selected search for FlashCard
+      setSelectedSearch(search);
     } catch (error) {
       console.error(error);
     }
@@ -144,7 +148,7 @@ const InputChatGPT = () => {
       console.error(error);
     }
   };
-  
+
 
   useEffect(() => {
     if (editingTitleIndex !== null) {
@@ -157,8 +161,9 @@ const InputChatGPT = () => {
     <div className="flex">
       {/* Sidebar */}
       <div
-        className={`bg-gray-100 transition-all duration-300 ${isSidebarVisible ? 'w-3/12' : 'w-12'
-          }`}
+        className={`bg-gray-100 transition-all duration-300 ${
+          isSidebarVisible ? 'w-3/12' : 'w-12'
+        }`}
         style={{ height: '100vh' }}
       >
         {/* Toggle sidebar button */}
@@ -170,19 +175,20 @@ const InputChatGPT = () => {
             <BsLayoutSidebarInset size={24} />
           </button>
         </div>
-
+  
         {/* Search History */}
         {isSidebarVisible && (
           <div className="p-4">
             {searchHistory.map((search, index) => (
               <div
                 key={index}
-                className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${editingTitleIndex === index
-                  ? 'bg-blue-100'
-                  : activeSearchIndex === index
+                className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${
+                  editingTitleIndex === index
+                    ? 'bg-blue-100'
+                    : activeSearchIndex === index
                     ? 'bg-gray-300'
                     : 'hover:bg-gray-200'
-                  }`}
+                }`}
               >
                 <div className="flex items-center">
                   {showConfirmation === index && (
@@ -272,7 +278,7 @@ const InputChatGPT = () => {
           </div>
         )}
       </div>
-
+  
       {/* Main content */}
       <div className="w-full px-4 flex-1 text-center">
         <div className="flex flex-col gap-2 mt-4">
@@ -296,8 +302,19 @@ const InputChatGPT = () => {
           </div>
         </div>
       </div>
+      
+      {/* Flash Card section */}
+      {selectedSearch && (
+        <FlashCard
+          title={selectedSearch.title || selectedSearch.query}
+          query={selectedSearch.query}
+          assertion={selectedSearch.assertion}
+          timestamp={selectedSearch.timestamp}
+        />
+      )}
     </div>
   );
+  
 };
 
 export default InputChatGPT;
