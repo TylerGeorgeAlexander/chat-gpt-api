@@ -238,9 +238,10 @@ const InputChatGPT = () => {
     <div className="flex">
       {/* Sidebar */}
       <div
-        className={`bg-gray-100 transition-all ease-in-out duration-300 ${isSidebarVisible ? "w-64" : "w-16"
+        className={`bg-gray-100 transition-all ease-in-out duration-300 ${isSidebarVisible ? "w-64" : "w-16 bg-white"
           }`}
-        style={{ height: "100vh" }}
+          style={{ height: `calc(100vh - 4rem)` }} // Adjust the height based on your navbar's height
+    
       >
         {/* Toggle sidebar button */}
         <div className="p-4 flex justify-center items-center">
@@ -419,6 +420,7 @@ const InputChatGPT = () => {
       </div>
     </div>
   );
+
 };
 
 export default InputChatGPT;
