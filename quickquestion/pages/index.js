@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Routes, Route, Link } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
-import moment from 'moment';
+import Head from 'next/head';
 import Home from './Home';
-import Login from '../components/Login';
+import Login from './Login';
 import RegistrationPage from './RegistrationPage';
 import Dashboard from './Dashboard';
 import LogoutButton from '../components/LogoutButton';
 import PrivateWrapper from '../components/PrivateWrapper';
+import Link from 'next/link';
 
-const IndexPage = () => {
+export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authToken, setAuthToken] = useState('');
   const [tokenExpiration, setTokenExpiration] = useState(null);
@@ -21,11 +20,7 @@ const IndexPage = () => {
     const storedAuthToken = localStorage.getItem('authToken');
     const storedTokenExpiration = localStorage.getItem('tokenExpiration');
 
-    if (
-      storedAuthToken &&
-      storedTokenExpiration &&
-      new Date(storedTokenExpiration) > new Date()
-    ) {
+    if (storedAuthToken && new Date(storedTokenExpiration) > new Date()) {
       setIsLoggedIn(true);
       setAuthToken(storedAuthToken);
       setTokenExpiration(storedTokenExpiration);
@@ -41,8 +36,8 @@ const IndexPage = () => {
 
   const handleLogin = (authTokenFromBackend) => {
     try {
-      const decodedToken = jwtDecode(authTokenFromBackend);
-      const expirationTime = moment.unix(decodedToken.exp);
+      const decodedToken = JSON.parse(atob(authTokenFromBackend.split('.')[1]));
+      const expirationTime = new Date(decodedToken.exp * 1000);
 
       localStorage.setItem('authToken', authTokenFromBackend);
       localStorage.setItem('tokenExpiration', expirationTime.toISOString());
@@ -50,6 +45,7 @@ const IndexPage = () => {
       setIsLoggedIn(true);
       setAuthToken(authTokenFromBackend);
       setTokenExpiration(expirationTime.toISOString());
+      router.push('/dashboard'); // Redirect to the dashboard page after login
     } catch (error) {
       console.error('Error handling login:', error);
     }
@@ -61,62 +57,62 @@ const IndexPage = () => {
     setIsLoggedIn(false);
     setAuthToken('');
     setTokenExpiration(null);
-    router.push('/');
+    router.push('/'); // Redirect to the home page after logout
   };
 
   return (
-    <div className="App">
-      <nav className="navbar bg-gray-900 text-white py-4">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="navbar__logo">
-            <Link href="/" className="text-xl font-bold">
-              Chat GPT API Generator
-            </Link>
-          </div>
-          <ul className="navbar__menu flex space-x-4">
-            {isLoggedIn ? (
-              <>
+    <>
+      <Head>
+        <title>Chat GPT API Generator</title>
+      </Head>
+      <div className="App">
+        <nav className="navbar bg-gray-900 text-white py-4">
+          <div className="container mx-auto flex items-center justify-between">
+            <div className="navbar__logo">
+              <Link href="/" className="text-xl font-bold">
+                Chat GPT API Generator
+              </Link>
+            </div>
+            <ul className="navbar__menu flex space-x-4">
+              {isLoggedIn ? (
+                <>
+                  <li>
+                    <Link href="/dashboard" className="text-gray-300 hover:text-white">
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <LogoutButton onLogout={handleLogout} />
+                  </li>
+                </>
+              ) : (
                 <li>
-                  <Link href="/dashboard" className="text-gray-300 hover:text-white">
-                    Dashboard
+                  <Link href="/login" className="text-gray-300 hover:text-white">
+                    Login
                   </Link>
                 </li>
-                <li>
-                  <LogoutButton onLogout={handleLogout} />
-                </li>
-              </>
-            ) : (
-              <li>
-                <Link href="/login" className="text-gray-300 hover:text-white">
-                  Login
-                </Link>
-              </li>
-            )}
-          </ul>
-        </div>
-      </nav>
+              )}
+            </ul>
+          </div>
+        </nav>
 
-      <div id="App" className="">
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/registration" element={<RegistrationPage />} />
-            <Route
-              path="/dashboard"
-              element={
+        <div id="App" className="">
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : (
+            <>
+              <Home />
+              <Login onLogin={handleLogin} />
+              <RegistrationPage />
+              {isLoggedIn && (
                 <PrivateWrapper isLoggedIn={isLoggedIn} authToken={authToken}>
                   <Dashboard authToken={authToken} />
                 </PrivateWrapper>
-              }
-            />
-          </Routes>
-        )}
+              )}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
-};
-
-export default IndexPage;
+}

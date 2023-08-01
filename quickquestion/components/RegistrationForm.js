@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link  from 'next/link'
 import logo from '../public/logo.svg'; // Update this path to where your logo is stored
 
 const RegistrationForm = () => {
