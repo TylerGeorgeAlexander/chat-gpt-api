@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Home from './Home';
-import Login from './Login';
-import RegistrationPage from './RegistrationPage';
+import Login from './login';
+import RegistrationPage from './registration';
 import Dashboard from './Dashboard';
 import LogoutButton from '../components/LogoutButton';
 import PrivateWrapper from '../components/PrivateWrapper';
 import Link from 'next/link';
+import '../styles/globals.css';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -102,8 +103,6 @@ export default function App() {
           ) : (
             <>
               <Home />
-              <Login onLogin={handleLogin} />
-              <RegistrationPage />
               {isLoggedIn && (
                 <PrivateWrapper isLoggedIn={isLoggedIn} authToken={authToken}>
                   <Dashboard authToken={authToken} />

@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import heroImage from '../public/chip-design.jpg'; // Update this path to where your hero image is stored
 
 const Home = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import logo from "../public/logo.svg"; // TODO: Update this path to where your logo is stored
