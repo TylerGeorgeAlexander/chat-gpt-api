@@ -9,6 +9,7 @@ import { AiFillEdit, AiFillSave } from "react-icons/ai";
 import { FiTrash2, FiCheck, FiX, FiPlus } from "react-icons/fi"; // <-- import the new icons
 import FlashCard from "./FlashCard";
 
+
 const InputChatGPT = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
