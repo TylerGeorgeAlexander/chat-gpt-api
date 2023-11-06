@@ -2,11 +2,10 @@
   "name": "chat-gpt-api",
   "version": "1.0.0",
   "description": "",
-  "type": "commonjs",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "start": "cd server && npm start",
-    "develop": "concurrently \"cd server && npm run dev\" \"cd client && npm start\"",
+    "develop": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
     "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd client && npm run build"
 
