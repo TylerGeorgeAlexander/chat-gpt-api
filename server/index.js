@@ -2,7 +2,7 @@ const express = require('express');
 const { config } = require('dotenv');
 const { Configuration, OpenAIApi } = require('openai');
 const mongoose = require('mongoose');
-const extractUserId= require('./middleware/authMiddleware')
+const extractUserId = require('./middleware/authMiddleware')
 
 // Load environment variables from .env file
 config();
