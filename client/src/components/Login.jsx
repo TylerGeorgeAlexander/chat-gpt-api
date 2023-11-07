@@ -58,7 +58,7 @@ const Login = ({ onLogin }) => {
   const handleLogin = async () => {
     // Send the login data to the server
     try {
-      const response = await fetch("http://localhost:2121/api/users/login", {
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

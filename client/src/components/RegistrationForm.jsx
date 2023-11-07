@@ -16,7 +16,7 @@ const RegistrationForm = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:2121/api/users/register', {
+            const response = await fetch(`${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
