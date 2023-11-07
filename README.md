@@ -1,5 +1,7 @@
 # chat-gpt-api
 
+[Live Demo](https://chat-gpt-api-generator-e42f3131abd6.herokuapp.com/)
+
 ![Chat GPT API Generator homepage](chat-gpt-api-generator-homepage.png)
 
 ## Node-Based Application with ChatGPT API
