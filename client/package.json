@@ -8,8 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "start": "serve dist"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -37,7 +36,7 @@
     "vite": "^4.4.5"
   },
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },
   "devDependencies": {
     "cypress": "^13.1.0",
