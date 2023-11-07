@@ -6,7 +6,6 @@
   "scripts": {
     "start": "concurrently \"cd server && npm run start\" \"cd client && npm run start\"",
     "install": "cd server && npm i && cd ../client && npm i",
-    "heroku-postbuild": "cd client && npm run build",
     "develop": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
     "build": "cd client && npm run build"
 
@@ -14,7 +13,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "concurrently": "^7.6.0"
   }
 }
