@@ -9,6 +9,7 @@ import { AiFillEdit, AiFillSave } from "react-icons/ai";
 import { FiTrash2, FiCheck, FiX, FiPlus } from "react-icons/fi"; // <-- import the new icons
 import FlashCard from "./FlashCard";
 
+
 const InputChatGPT = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -27,7 +28,7 @@ const InputChatGPT = () => {
   const fetchSearchHistory = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/users/search-history`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/search-history`,
         {
           method: "GET",
           headers: {
@@ -93,7 +94,7 @@ const InputChatGPT = () => {
   const updateSearchHistory = async (query, assertion, title) => {
     try {
       await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/users/search-history`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/search-history`,
         {
           method: "POST",
           body: JSON.stringify({ query, assertion, title }),
@@ -121,7 +122,7 @@ const InputChatGPT = () => {
       };
 
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/users/chat`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/chat`,
         {
           method: "POST",
           body: JSON.stringify(requestData),
@@ -149,7 +150,7 @@ const InputChatGPT = () => {
   const restoreSearch = async (searchId) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
         {
           method: "GET",
           headers: {
@@ -174,7 +175,7 @@ const InputChatGPT = () => {
   const updateTitle = async (searchId, title) => {
     try {
       await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
         {
           method: "PUT",
           body: JSON.stringify({ title }),
@@ -194,7 +195,7 @@ const InputChatGPT = () => {
   const deleteUserSearchHistory = async (searchId) => {
     try {
       await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
         {
           method: "DELETE",
           headers: {
