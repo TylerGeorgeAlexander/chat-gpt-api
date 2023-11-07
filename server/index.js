@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const { config } = require('dotenv');
 const { Configuration, OpenAIApi } = require('openai');
 const mongoose = require('mongoose');
