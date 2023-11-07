@@ -35,6 +35,14 @@ app.use(express.json());
 const routes = require('./routes/index');
 app.use('/api', routes);
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  });
+}
+
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
