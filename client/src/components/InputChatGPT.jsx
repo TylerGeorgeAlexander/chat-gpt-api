@@ -244,7 +244,7 @@ const InputChatGPT = () => {
       {/* Sidebar */}
       <div
         className={`bg-gray-100 transition-all ease-in-out duration-300 ${
-          isSidebarVisible ? "w-64" : "w-16 bg-white"
+          isSidebarVisible ? "w-96" : "w-16 bg-white"
         }`}
         style={{ height: `calc(100vh - 4rem)` }} // Adjust the height based on your navbar's height
       >
