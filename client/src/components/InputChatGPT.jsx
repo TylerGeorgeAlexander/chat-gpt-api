@@ -9,7 +9,6 @@ import { AiFillEdit, AiFillSave } from "react-icons/ai";
 import { FiTrash2, FiCheck, FiX, FiPlus } from "react-icons/fi"; // <-- import the new icons
 import FlashCard from "./FlashCard";
 
-
 const InputChatGPT = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -85,7 +84,6 @@ const InputChatGPT = () => {
     }
   };
 
-
   useEffect(() => {
     fetchSearchHistory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -150,7 +148,9 @@ const InputChatGPT = () => {
   const restoreSearch = async (searchId) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        `${
+          import.meta.env.VITE_REACT_APP_BASE_URL
+        }/api/users/search-history/${searchId}`,
         {
           method: "GET",
           headers: {
@@ -175,7 +175,9 @@ const InputChatGPT = () => {
   const updateTitle = async (searchId, title) => {
     try {
       await fetch(
-        `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        `${
+          import.meta.env.VITE_REACT_APP_BASE_URL
+        }/api/users/search-history/${searchId}`,
         {
           method: "PUT",
           body: JSON.stringify({ title }),
@@ -195,7 +197,9 @@ const InputChatGPT = () => {
   const deleteUserSearchHistory = async (searchId) => {
     try {
       await fetch(
-        `${import.meta.env.VITE_REACT_APP_BASE_URL}/api/users/search-history/${searchId}`,
+        `${
+          import.meta.env.VITE_REACT_APP_BASE_URL
+        }/api/users/search-history/${searchId}`,
         {
           method: "DELETE",
           headers: {
@@ -239,10 +243,10 @@ const InputChatGPT = () => {
     <div className="flex">
       {/* Sidebar */}
       <div
-        className={`bg-gray-100 transition-all ease-in-out duration-300 ${isSidebarVisible ? "w-64" : "w-16 bg-white"
-          }`}
-          style={{ height: `calc(100vh - 4rem)` }} // Adjust the height based on your navbar's height
-    
+        className={`bg-gray-100 transition-all ease-in-out duration-300 ${
+          isSidebarVisible ? "w-64" : "w-16 bg-white"
+        }`}
+        style={{ height: `calc(100vh - 4rem)` }} // Adjust the height based on your navbar's height
       >
         {/* Toggle sidebar button */}
         <div className="p-4 flex justify-center items-center">
@@ -270,111 +274,114 @@ const InputChatGPT = () => {
                 New Question
               </button>
             </div>
-            {searchHistory.map((search, index) => (
-              <React.Fragment key={index}>
-                {index === 0 ||
+            <div className="max-h-[calc(100vh-15rem)] overflow-y-auto pr-4">
+              {searchHistory.map((search, index) => (
+                <React.Fragment key={index}>
+                  {index === 0 ||
                   search.relativeTime !==
-                  searchHistory[index - 1].relativeTime ? (
-                  <div className="text-gray-500 mb-2">
-                    {search.relativeTime}
-                  </div>
-                ) : null}
-                <div
-                  className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${editingTitleIndex === index
-                      ? "bg-blue-100"
-                      : activeSearchIndex === index
+                    searchHistory[index - 1].relativeTime ? (
+                    <div className="text-gray-500 mb-2">
+                      {search.relativeTime}
+                    </div>
+                  ) : null}
+                  <div
+                    className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${
+                      editingTitleIndex === index
+                        ? "bg-blue-100"
+                        : activeSearchIndex === index
                         ? "bg-gray-300"
                         : "hover:bg-gray-200"
                     }`}
-                >
-                  <div className="flex items-center">
-                    {showConfirmation === index && (
-                      <span className="text-gray-500 hover:text-gray-700 mr-2">
-                        <FiTrash2 size={16} />
-                      </span>
-                    )}
-                    <button
-                      className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
-                      onClick={() => {
-                        setActiveSearchIndex(index);
-                        restoreSearch(search._id);
-                      }}
-                    >
-                      {editingTitleIndex === index ? (
-                        <input
-                          ref={inputRef}
-                          type="text"
-                          value={editedTitle}
-                          onChange={(e) => setEditedTitle(e.target.value)}
-                          onBlur={() => {
-                            setEditingTitleIndex(null);
-                            updateTitle(search._id, editedTitle);
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              setEditingTitleIndex(null);
-                              updateTitle(search._id, editedTitle);
-                            }
-                          }}
-                        />
-                      ) : search.title && search.title.length > 12 ? (
-                        `${search.title.slice(0, 12)}...`
-                      ) : (
-                        search.title || search.query
+                  >
+                    <div className="flex items-center">
+                      {showConfirmation === index && (
+                        <span className="text-gray-500 hover:text-gray-700 mr-2">
+                          <FiTrash2 size={16} />
+                        </span>
                       )}
-                    </button>
-                  </div>
-                  <div>
-                    {showConfirmation !== index && (
-                      <>
-                        <button
-                          className="text-gray-500 hover:text-gray-700 ml-2"
-                          onClick={() => {
-                            if (editingTitleIndex === index) {
+                      <button
+                        className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
+                        onClick={() => {
+                          setActiveSearchIndex(index);
+                          restoreSearch(search._id);
+                        }}
+                      >
+                        {editingTitleIndex === index ? (
+                          <input
+                            ref={inputRef}
+                            type="text"
+                            value={editedTitle}
+                            onChange={(e) => setEditedTitle(e.target.value)}
+                            onBlur={() => {
                               setEditingTitleIndex(null);
                               updateTitle(search._id, editedTitle);
-                            } else {
-                              setEditingTitleIndex(index);
-                              setEditedTitle(search.title || search.query);
-                            }
-                          }}
-                        >
-                          {editingTitleIndex === index ? (
-                            <AiFillSave size={16} />
-                          ) : (
-                            <AiFillEdit size={16} />
-                          )}
-                        </button>
-                        {editingTitleIndex !== index && (
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                setEditingTitleIndex(null);
+                                updateTitle(search._id, editedTitle);
+                              }
+                            }}
+                          />
+                        ) : search.title && search.title.length > 12 ? (
+                          `${search.title.slice(0, 12)}...`
+                        ) : (
+                          search.title || search.query
+                        )}
+                      </button>
+                    </div>
+                    <div>
+                      {showConfirmation !== index && (
+                        <>
                           <button
                             className="text-gray-500 hover:text-gray-700 ml-2"
-                            onClick={() => setShowConfirmation(index)}
+                            onClick={() => {
+                              if (editingTitleIndex === index) {
+                                setEditingTitleIndex(null);
+                                updateTitle(search._id, editedTitle);
+                              } else {
+                                setEditingTitleIndex(index);
+                                setEditedTitle(search.title || search.query);
+                              }
+                            }}
                           >
-                            <FiTrash2 size={16} />
+                            {editingTitleIndex === index ? (
+                              <AiFillSave size={16} />
+                            ) : (
+                              <AiFillEdit size={16} />
+                            )}
                           </button>
-                        )}
-                      </>
-                    )}
-                    {showConfirmation === index && (
-                      <>
-                        <button
-                          className="text-gray-500 hover:text-gray-700 ml-2"
-                          onClick={() => deleteUserSearchHistory(search._id)}
-                        >
-                          <FiCheck size={16} />
-                        </button>
-                        <button
-                          className="text-gray-500 hover:text-gray-700 ml-2"
-                          onClick={() => setShowConfirmation(null)}
-                        >
-                          <FiX size={16} />
-                        </button>
-                      </>
-                    )}
+                          {editingTitleIndex !== index && (
+                            <button
+                              className="text-gray-500 hover:text-gray-700 ml-2"
+                              onClick={() => setShowConfirmation(index)}
+                            >
+                              <FiTrash2 size={16} />
+                            </button>
+                          )}
+                        </>
+                      )}
+                      {showConfirmation === index && (
+                        <>
+                          <button
+                            className="text-gray-500 hover:text-gray-700 ml-2"
+                            onClick={() => deleteUserSearchHistory(search._id)}
+                          >
+                            <FiCheck size={16} />
+                          </button>
+                          <button
+                            className="text-gray-500 hover:text-gray-700 ml-2"
+                            onClick={() => setShowConfirmation(null)}
+                          >
+                            <FiX size={16} />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </React.Fragment>
-            ))}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -423,7 +430,6 @@ const InputChatGPT = () => {
       </div>
     </div>
   );
-
 };
 
 export default InputChatGPT;
