@@ -1,5 +1,5 @@
 // Settings.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import * as PrismStyles from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -22,10 +22,23 @@ const Settings = ({ title, query, timestamp }) => {
   - **Bold text**
   - [Link](https://www.example.com)
 `);
+useEffect(() => {
+  // Get the selected style from local storage
+  const savedStyle = localStorage.getItem("selectedStyle");
+  if (savedStyle && styles.includes(savedStyle)) {
+    setSelectedStyle(savedStyle);
+  } else {
+    // If there isn't a style in local storage, set the default style to "oneLight"
+    setSelectedStyle("oneLight");
+  }
+}, []);
 
 
   const handleStyleChange = (e) => {
-    setSelectedStyle(e.target.value);
+    const newSelectedStyle = e.target.value;
+    setSelectedStyle(newSelectedStyle);
+    // Save the selected style to local storage
+    localStorage.setItem("selectedStyle", newSelectedStyle);
   };
 
   const styles = [
