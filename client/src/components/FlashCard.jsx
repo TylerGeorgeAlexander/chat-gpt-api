@@ -15,8 +15,6 @@ const FlashCard = ({ title, query, assertion, timestamp }) => {
     setSelectedStyle(e.target.value);
   };
 
-  console.log(selectedStyle);
-
   const styles = [
     "coy",
     "dark",
