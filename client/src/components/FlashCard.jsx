@@ -25,37 +25,36 @@ const FlashCard = ({ title, query, assertion, timestamp }) => {
   return (
     <div className="max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-4">
       <div className="bg-white shadow-md rounded p-4 m-4">
-        <h2 className="font-bold text-lg">{title}</h2>
-        <p className="text-gray-600 text-xs">Query: {query}</p>
+        <h2 className="font-bold text-lg">Current Title: {title}</h2>
+        <p className="text-gray-600 text-xs">Original Query: {query}</p>
         <p className="text-gray-600 text-sm mt-2">
-          Assertion: <ReactMarkdown>{assertion}</ReactMarkdown>
+          Assertion:{" "}
+          <ReactMarkdown
+            children={assertion}
+            components={{
+              code(props) {
+                const { children, className, node, ...rest } = props;
+                const match = /language-(\w+)/.exec(className || "");
+                return match ? (
+                  <SyntaxHighlighter
+                    {...rest}
+                    PreTag="div"
+                    children={String(children).replace(/\n$/, "")}
+                    language={match[1]}
+                    style={getStyleObject(selectedStyle)}
+                  />
+                ) : (
+                  <code {...rest} className={className}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          />
         </p>
         <span className="text-gray-500 text-xs block mt-2">
           Timestamp: {new Date(timestamp).toLocaleString()}
         </span>
-
-        <ReactMarkdown
-          children={assertion}
-          components={{
-            code(props) {
-              const { children, className, node, ...rest } = props;
-              const match = /language-(\w+)/.exec(className || "");
-              return match ? (
-                <SyntaxHighlighter
-                  {...rest}
-                  PreTag="div"
-                  children={String(children).replace(/\n$/, "")}
-                  language={match[1]}
-                  style={getStyleObject(selectedStyle)}
-                />
-              ) : (
-                <code {...rest} className={className}>
-                  {children}
-                </code>
-              );
-            },
-          }}
-        />
       </div>
     </div>
   );
