@@ -409,7 +409,7 @@ const InputChatGPT = () => {
                   Generate
                 </button>
                 <div className="prose">
-                  <ReactMarkdown>{`${output}`}</ReactMarkdown>
+                  <ReactMarkdown>{output}</ReactMarkdown>
                 </div>
               </div>
             </div>
