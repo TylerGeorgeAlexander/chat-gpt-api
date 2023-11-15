@@ -7,6 +7,7 @@ import RegistrationPage from './pages/RegistrationPage';
 import Dashboard from './pages/Dashboard';
 import LogoutButton from './components/LogoutButton';
 import PrivateWrapper from './components/PrivateWrapper';
+import Settings from './pages/Settings';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -71,6 +72,14 @@ function App() {
                 <>
                   <li>
                     <Link
+                      to="/settings"
+                      className="text-gray-300 hover:text-white"
+                    >
+                      Settings
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       to="/dashboard"
                       className="text-gray-300 hover:text-white"
                     >
@@ -108,6 +117,14 @@ function App() {
                 element={
                   <PrivateWrapper isLoggedIn={isLoggedIn} authToken={authToken}>
                     <Dashboard authToken={authToken} />
+                  </PrivateWrapper>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <PrivateWrapper isLoggedIn={isLoggedIn} authToken={authToken}>
+                    <Settings authToken={authToken} />
                   </PrivateWrapper>
                 }
               />
