@@ -55,20 +55,28 @@ const styles = [
   "zTouch",
 ];
 
-const Settings = ({ title, query, timestamp }) => {
+const demoQuestion = {
+  title: "Sample Title",
+  query: "Sample Query",
+  assertion: `
+This is a **demo** markdown example:
+
+\`\`\`js
+// Your code block goes here
+console.log("Hello, world!");
+\`\`\`
+
+- *Italic text*
+- **Bold text**
+- [Link](https://www.example.com)
+`,
+  timestamp: new Date(),
+};
+
+const Settings = () => {
   const [selectedStyle, setSelectedStyle] = useState("oneLight");
-  const [assertion, setAssertion] = useState(`
-  This is a **demo** markdown example:
+  const { title, query, assertion, timestamp } = demoQuestion;
 
-  \`\`\`js
-  // Your code block goes here
-  console.log("Hello, world!");
-  \`\`\`
-
-  - *Italic text*
-  - **Bold text**
-  - [Link](https://www.example.com)
-`);
   useEffect(() => {
     // Get the selected style from local storage
     const savedStyle = localStorage.getItem("selectedStyle");
@@ -114,7 +122,7 @@ const Settings = ({ title, query, timestamp }) => {
       </div>
 
       <div className="bg-white shadow-md rounded p-4 m-4">
-        <h2 className="font-bold text-lg">{title}</h2>
+        <h2 className="font-bold text-lg">Title: {title}</h2>
         <p className="text-gray-600 text-xs">Query: {query}</p>
         <p className="text-gray-600 text-sm mt-2">
           Assertion:{" "}
