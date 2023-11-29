@@ -243,15 +243,15 @@ const InputChatGPT = () => {
     <div className="flex">
       {/* Sidebar */}
       <div
-        className={`bg-gray-100 transition-all ease-in-out duration-300 ${
-          isSidebarVisible ? "w-96" : "w-16 bg-white"
+        className={`bg-gray-100 dark:bg-gray-900 transition-all ease-in-out duration-300 ${
+          isSidebarVisible ? "w-96" : "w-16 bg-white dark:bg-gray-800"
         }`}
         style={{ height: `calc(100vh - 4rem)` }} // Adjust the height based on your navbar's height
       >
         {/* Toggle sidebar button */}
         <div className="p-4 flex justify-center items-center">
           <button
-            className="text-black hover:bg-gray-300 p-2 rounded-full"
+            className={`text-black hover:bg-gray-300 p-2 rounded-full dark:text-white dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400`}
             onClick={() => setIsSidebarVisible(!isSidebarVisible)}
           >
             {isSidebarVisible ? (
@@ -267,7 +267,7 @@ const InputChatGPT = () => {
           <div className="p-4 flex flex-col">
             <div className="flex justify-center m-4">
               <button
-                className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center"
+                className={`bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center dark:bg-blue-800 dark:hover:bg-blue-700`}
                 onClick={handleNewQuestionClick}
               >
                 <FiPlus size={16} className="mr-1" />
@@ -287,10 +287,10 @@ const InputChatGPT = () => {
                   <div
                     className={`flex items-center justify-between mb-2 p-2 rounded transition-colors duration-200 ${
                       editingTitleIndex === index
-                        ? "bg-blue-100"
+                        ? "bg-blue-100 dark:bg-blue-700"
                         : activeSearchIndex === index
-                        ? "bg-gray-300"
-                        : "hover:bg-gray-200"
+                        ? "bg-gray-300 dark:bg-gray-600"
+                        : "hover:bg-gray-200 dark:hover:bg-gray-700"
                     }`}
                   >
                     <div className="flex items-center">
@@ -300,7 +300,7 @@ const InputChatGPT = () => {
                         </span>
                       )}
                       <button
-                        className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1"
+                        className={`text-blue-600 hover:text-blue-800 hover:underline focus:outline-none text-left truncate flex-1 dark:text-blue-400`}
                         onClick={() => {
                           setActiveSearchIndex(index);
                           restoreSearch(search._id);
@@ -334,7 +334,7 @@ const InputChatGPT = () => {
                       {showConfirmation !== index && (
                         <>
                           <button
-                            className="text-gray-500 hover:text-gray-700 ml-2"
+                            className={`text-gray-500 hover:text-gray-700 ml-2 dark:text-gray-400`}
                             onClick={() => {
                               if (editingTitleIndex === index) {
                                 setEditingTitleIndex(null);
@@ -353,7 +353,7 @@ const InputChatGPT = () => {
                           </button>
                           {editingTitleIndex !== index && (
                             <button
-                              className="text-gray-500 hover:text-gray-700 ml-2"
+                              className={`text-gray-500 hover:text-gray-700 ml-2 dark:text-gray-400`}
                               onClick={() => setShowConfirmation(index)}
                             >
                               <FiTrash2 size={16} />
@@ -364,13 +364,13 @@ const InputChatGPT = () => {
                       {showConfirmation === index && (
                         <>
                           <button
-                            className="text-gray-500 hover:text-gray-700 ml-2"
+                            className={`text-gray-500 hover:text-gray-700 ml-2 dark:text-gray-400`}
                             onClick={() => deleteUserSearchHistory(search._id)}
                           >
                             <FiCheck size={16} />
                           </button>
                           <button
-                            className="text-gray-500 hover:text-gray-700 ml-2"
+                            className={`text-gray-500 hover:text-gray-700 ml-2 dark:text-gray-400`}
                             onClick={() => setShowConfirmation(null)}
                           >
                             <FiX size={16} />
@@ -391,19 +391,19 @@ const InputChatGPT = () => {
         {/* Main content */}
         {!selectedSearch && (
           <div className="px-4 py-6 flex-1 text-center">
-            <div className="bg-white shadow-md rounded p-4 m-4">
+            <div className="bg-white shadow-md rounded p-4 m-4 dark:bg-gray-900">
               <div className="flex flex-col gap-4">
                 <label htmlFor="chat-prompt" className="font-bold text-lg">
                   Input chatGPT prompt(s):
                 </label>
                 <textarea
                   id="chat-prompt"
-                  className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+                  className={`border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full dark:border-gray-600 dark:bg-gray-800 dark:text-white`}
                   value={input}
                   onChange={handleChange}
                 />
                 <button
-                  className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className={`bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-blue-800 dark:hover:bg-blue-700`}
                   onClick={handleClick}
                 >
                   Generate
