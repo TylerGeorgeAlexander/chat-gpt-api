@@ -15,12 +15,9 @@ function App() {
   const [authToken, setAuthToken] = useState("");
   const [tokenExpiration, setTokenExpiration] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  // Function to toggle between dark and light mode
-  const toggleDarkMode = () => {
-    setIsDarkMode((prevIsDarkMode) => !prevIsDarkMode);
-  };
+  const [isDarkMode, setIsDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
 
   // Toggle dark mode class on the <html> element
   useEffect(() => {
@@ -32,7 +29,14 @@ function App() {
         htmlElement.classList.remove("dark");
       }
     }
+    // Update localStorage when isDarkMode changes
+    localStorage.setItem("darkMode", isDarkMode);
   }, [isDarkMode]);
+
+  // Function to toggle between dark and light mode
+  const toggleDarkMode = () => {
+    setIsDarkMode((prevIsDarkMode) => !prevIsDarkMode);
+  };
 
   useEffect(() => {
     const storedAuthToken = localStorage.getItem("authToken");
