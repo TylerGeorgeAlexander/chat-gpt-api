@@ -96,12 +96,12 @@ const Settings = () => {
   };
 
   return (
-    <div className="max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-4">
+    <div className="min-h-[calc(100vh-4rem)] max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-4 dark:bg-gray-800 dark:text-white">
       {/* Style Dropdown Menu */}
       <div className="text-center">
         <label
           htmlFor="styleSelect"
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300"
         >
           Select a style:
         </label>
@@ -110,7 +110,7 @@ const Settings = () => {
             id="styleSelect"
             value={selectedStyle}
             onChange={handleStyleChange}
-            className="px-2 py-1 border rounded-md shadow-md focus:outline-none focus:ring focus:border-blue-300"
+            className="px-2 py-1 border rounded-md shadow-md focus:outline-none focus:ring focus:border-blue-300 dark:bg-gray-700 dark:border-gray-600"
           >
             {styles.map((style) => (
               <option key={style} value={style}>
@@ -121,10 +121,12 @@ const Settings = () => {
         </div>
       </div>
 
-      <div className="bg-white shadow-md rounded p-4 m-4">
-        <h2 className="font-bold text-lg">Title: {title}</h2>
-        <p className="text-gray-600 text-xs">Query: {query}</p>
-        <p className="text-gray-600 text-sm mt-2">
+      <div className="bg-white dark:bg-gray-900 shadow-md rounded p-4 m-4">
+        <h2 className="font-bold text-lg dark:text-white">Title: {title}</h2>
+        <p className="text-gray-600 dark:text-gray-300 text-xs">
+          Query: {query}
+        </p>
+        <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
           Assertion:{" "}
           <ReactMarkdown
             children={assertion}
@@ -149,7 +151,7 @@ const Settings = () => {
             }}
           />
         </p>
-        <span className="text-gray-500 text-xs block mt-2">
+        <span className="text-gray-500 dark:text-gray-400 text-xs block mt-2">
           Timestamp: {new Date(timestamp).toLocaleString()}
         </span>
       </div>
