@@ -51,7 +51,6 @@ const InputChatGPT = () => {
         };
       });
       setSearchHistory(formattedHistory);
-      console.log(formattedHistory);
     } catch (error) {
       console.error(error);
       // Redirect to login if unauthorized or error occurs
