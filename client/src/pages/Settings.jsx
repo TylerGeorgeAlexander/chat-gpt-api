@@ -126,7 +126,7 @@ const Settings = () => {
         <p className="text-gray-600 dark:text-gray-300 text-xs">
           Query: {query}
         </p>
-        <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
+        <div className="text-gray-600 dark:text-gray-300 text-sm mt-2">
           Assertion:{" "}
           <ReactMarkdown
             children={assertion}
@@ -150,7 +150,7 @@ const Settings = () => {
               },
             }}
           />
-        </p>
+        </div>
         <span className="text-gray-500 dark:text-gray-400 text-xs block mt-2">
           Timestamp: {new Date(timestamp).toLocaleString()}
         </span>
