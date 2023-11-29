@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import LogoutButton from "./components/LogoutButton";
 import PrivateWrapper from "./components/PrivateWrapper";
 import Settings from "./pages/Settings";
+import ToggleSwitch from "./components/ToggleSwitch";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -96,8 +97,13 @@ function App() {
                 Chat GPT API Generator
               </Link>
             </div>
-            <button onClick={toggleDarkMode}>Toggle Dark Mode</button>
             <ul className="navbar__menu flex space-x-4">
+              <div className="flex items-center mr-2">
+                <ToggleSwitch checked={isDarkMode} onChange={toggleDarkMode} />
+                <div className="ml-2">
+                  {isDarkMode ? "Dark Mode" : "Light Mode"}
+                </div>
+              </div>
               {isLoggedIn ? (
                 <>
                   <li>
