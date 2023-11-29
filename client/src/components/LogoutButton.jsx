@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const LogoutButton = ({ onLogout }) => {
   const handleLogout = () => {
@@ -8,7 +8,7 @@ const LogoutButton = ({ onLogout }) => {
 
   return (
     <button
-      className="text-gray-300 hover:text-white"
+      className="text-gray-300 dark:text-gray-300 hover:text-white dark:hover:text-white"
       onClick={handleLogout}
     >
       Logout
