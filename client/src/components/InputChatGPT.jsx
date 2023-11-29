@@ -23,6 +23,7 @@ const InputChatGPT = () => {
   const [showConfirmation, setShowConfirmation] = useState(null); // New state for confirmation dialog
   const inputRef = useRef(null); // Ref for the input element
   const [selectedSearch, setSelectedSearch] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // State for loading spinner
 
   const fetchSearchHistory = async () => {
     try {
@@ -114,6 +115,8 @@ const InputChatGPT = () => {
 
   const handleClick = async () => {
     try {
+      setIsLoading(true); // Start loading
+
       const requestData = {
         input: input,
       };
@@ -141,6 +144,8 @@ const InputChatGPT = () => {
       console.error(error);
       // Redirect to login if unauthorized or error occurs
       navigate("/login");
+    } finally {
+      setIsLoading(false); // Stop loading when data is loaded or an error occurs
     }
   };
 
@@ -404,8 +409,10 @@ const InputChatGPT = () => {
                 <button
                   className={`bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-blue-800 dark:hover:bg-blue-700`}
                   onClick={handleClick}
+                  disabled={isLoading} // Disable the button while loading
                 >
-                  Generate
+                  {isLoading ? "Loading..." : "Generate"}{" "}
+                  {/* Show "Loading..." while loading */}
                 </button>
                 <div className="prose">
                   <ReactMarkdown>{output}</ReactMarkdown>
