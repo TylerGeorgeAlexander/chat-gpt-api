@@ -76,9 +76,6 @@ const Login = ({ onLogin }) => {
         // Call the onLogin callback with the received authToken
         onLogin(result.authToken);
 
-        // Log for demonstration purposes
-        console.log("Logged in successfully:", result);
-
         // Redirect to the dashboard
         navigate("/dashboard");
       } else {
