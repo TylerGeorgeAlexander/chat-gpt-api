@@ -23,11 +23,11 @@ const FlashCard = ({ title, query, assertion, timestamp }) => {
   }, []);
 
   return (
-    <div className="max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-4">
-      <div className="bg-white shadow-md rounded p-4 m-4">
+    <div className="max-h-[calc(100vh-7.5rem)] overflow-y-auto pr-4 dark:bg-gray-800 dark:text-white">
+      <div className="bg-white shadow-md rounded p-4 m-4 dark:bg-gray-900">
         <h2 className="font-bold text-lg">Current Title: {title}</h2>
-        <p className="text-gray-600 text-xs">Original Query: {query}</p>
-        <p className="text-gray-600 text-sm mt-2">
+        <p className="text-gray-600 dark:text-gray-300 text-xs">Original Query: {query}</p>
+        <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
           Assertion:{" "}
           <ReactMarkdown
             children={assertion}
@@ -52,7 +52,7 @@ const FlashCard = ({ title, query, assertion, timestamp }) => {
             }}
           />
         </p>
-        <span className="text-gray-500 text-xs block mt-2">
+        <span className="text-gray-500 dark:text-gray-400 text-xs block mt-2">
           Timestamp: {new Date(timestamp).toLocaleString()}
         </span>
       </div>
