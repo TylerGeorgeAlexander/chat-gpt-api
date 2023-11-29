@@ -1,25 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import './App.css';
-import Home from './pages/Home';
-import Login from './components/Login';
-import RegistrationPage from './pages/RegistrationPage';
-import Dashboard from './pages/Dashboard';
-import LogoutButton from './components/LogoutButton';
-import PrivateWrapper from './components/PrivateWrapper';
-import Settings from './pages/Settings';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import "./App.css";
+import Home from "./pages/Home";
+import Login from "./components/Login";
+import RegistrationPage from "./pages/RegistrationPage";
+import Dashboard from "./pages/Dashboard";
+import LogoutButton from "./components/LogoutButton";
+import PrivateWrapper from "./components/PrivateWrapper";
+import Settings from "./pages/Settings";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authToken, setAuthToken] = useState('');
+  const [authToken, setAuthToken] = useState("");
   const [tokenExpiration, setTokenExpiration] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Function to toggle between dark and light mode
+  const toggleDarkMode = () => {
+    setIsDarkMode((prevIsDarkMode) => !prevIsDarkMode);
+  };
+
+  // Toggle dark mode class on the <html> element
+  useEffect(() => {
+    const htmlElement = document.querySelector("html");
+    if (htmlElement) {
+      if (isDarkMode) {
+        htmlElement.classList.add("dark");
+      } else {
+        htmlElement.classList.remove("dark");
+      }
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
-    const storedAuthToken = localStorage.getItem('authToken');
-    const storedTokenExpiration = localStorage.getItem('tokenExpiration');
+    const storedAuthToken = localStorage.getItem("authToken");
+    const storedTokenExpiration = localStorage.getItem("tokenExpiration");
 
-    if (storedAuthToken && storedTokenExpiration && new Date(storedTokenExpiration) > new Date()) {
+    if (
+      storedAuthToken &&
+      storedTokenExpiration &&
+      new Date(storedTokenExpiration) > new Date()
+    ) {
       setIsLoggedIn(true);
       setAuthToken(storedAuthToken);
       setTokenExpiration(storedTokenExpiration);
@@ -35,31 +57,38 @@ function App() {
 
   const handleLogin = (authTokenFromBackend) => {
     try {
-      const decodedToken = JSON.parse(atob(authTokenFromBackend.split('.')[1]));
+      const decodedToken = JSON.parse(atob(authTokenFromBackend.split(".")[1]));
       const expirationTime = new Date(decodedToken.exp * 1000);
 
-      localStorage.setItem('authToken', authTokenFromBackend);
-      localStorage.setItem('tokenExpiration', expirationTime.toISOString());
+      localStorage.setItem("authToken", authTokenFromBackend);
+      localStorage.setItem("tokenExpiration", expirationTime.toISOString());
 
       setIsLoggedIn(true);
       setAuthToken(authTokenFromBackend);
       setTokenExpiration(expirationTime.toISOString());
     } catch (error) {
-      console.error('Error handling login:', error);
+      console.error("Error handling login:", error);
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('tokenExpiration');
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("tokenExpiration");
     setIsLoggedIn(false);
-    setAuthToken('');
+    setAuthToken("");
     setTokenExpiration(null);
   };
 
   return (
     <Router>
-      <div className="App">
+      <div
+        id="App"
+        className={
+          isDarkMode
+            ? "dark:bg-gray-800 dark:text-white"
+            : "bg-white text-black"
+        }
+      >
         <nav className="navbar bg-gray-900 text-white py-4">
           <div className="container mx-auto flex items-center justify-between">
             <div className="navbar__logo">
@@ -67,6 +96,7 @@ function App() {
                 Chat GPT API Generator
               </Link>
             </div>
+            <button onClick={toggleDarkMode}>Toggle Dark Mode</button>
             <ul className="navbar__menu flex space-x-4">
               {isLoggedIn ? (
                 <>
@@ -92,10 +122,7 @@ function App() {
                 </>
               ) : (
                 <li>
-                  <Link
-                    to="/login"
-                    className="text-gray-300 hover:text-white"
-                  >
+                  <Link to="/login" className="text-gray-300 hover:text-white">
                     Login
                   </Link>
                 </li>
