@@ -57,7 +57,7 @@ const RegistrationForm = () => {
               type="text"
               value={username}
               onChange={handleUsernameChange}
-              className={`border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md w-full ${
+              className={`border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md w-full ${
                 error ? "dark:text-white" : ""
               }`}
             />
@@ -68,7 +68,7 @@ const RegistrationForm = () => {
               type="email"
               value={email}
               onChange={handleEmailChange}
-              className={`border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md w-full ${
+              className={`border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md w-full ${
                 error ? "dark:text-white" : ""
               }`}
             />
@@ -79,7 +79,7 @@ const RegistrationForm = () => {
               type="password"
               value={password}
               onChange={handlePasswordChange}
-              className={`border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md w-full ${
+              className={`border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md w-full ${
                 error ? "dark:text-white" : ""
               }`}
             />
