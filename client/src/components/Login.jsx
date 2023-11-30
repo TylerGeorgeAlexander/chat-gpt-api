@@ -116,7 +116,7 @@ const Login = ({ onLogin }) => {
           <label className="block mb-4">
             Email:
             <input
-              className={`border border-gray-300 dark:border-gray-600 dark:bg-gray-700 px-3 py-2 rounded-md w-full ${
+              className={`border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 rounded-md w-full ${
                 isLoggingIn ? "dark:bg-gray-700 dark:text-white" : ""
               }`}
               type="email"
@@ -128,7 +128,7 @@ const Login = ({ onLogin }) => {
           <label className="block mb-4">
             Password:
             <input
-              className={`border border-gray-300 dark:border-gray-600 dark:bg-gray-700 px-3 py-2 rounded-md w-full ${
+              className={`border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 rounded-md w-full ${
                 isLoggingIn ? "dark:bg-gray-700 dark:text-white" : ""
               }`}
               type="password"
