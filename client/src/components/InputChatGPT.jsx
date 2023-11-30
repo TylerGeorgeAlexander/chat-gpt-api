@@ -315,6 +315,7 @@ const InputChatGPT = () => {
                             ref={inputRef}
                             type="text"
                             value={editedTitle}
+                            className="bg-white dark:bg-gray-800 dark:text-white"
                             onChange={(e) => setEditedTitle(e.target.value)}
                             onBlur={() => {
                               setEditingTitleIndex(null);
@@ -402,7 +403,7 @@ const InputChatGPT = () => {
                 </label>
                 <textarea
                   id="chat-prompt"
-                  className={`border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full dark:border-gray-600 dark:bg-gray-800 dark:text-white`}
+                  className={`border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white`}
                   value={input}
                   onChange={handleChange}
                 />
