@@ -61,7 +61,7 @@ To use this application, you need to set up the environment variables:
 
 3. Save the `.env` file.
 
-Additionally, please note the following environment variable related to the client (Vite) as mentioned in your project:
+Similarly, please note the following environment variable related to the client (Vite):
 
 - In the `client` directory, you should have a `.env` file with the following content:
 
