@@ -85,8 +85,19 @@ After installing dependencies and configuring the environment variable, you shou
 
 3. Create a login account / register your demo application:
 
+Most notably, register an account that correlates to `line 93` of `client\src\components\Login.jsx`.
+
+These lines could be removed or modified for your purposes.
+
+```
+  const handleDemoLogin = () => {
     setEmail("demo@example.com");
     setPassword("password");
+
+    // Start the login process
+    setIsLoggingIn(true);
+  };
+```
 
 4. Login to your newly created account or demo account.
 
